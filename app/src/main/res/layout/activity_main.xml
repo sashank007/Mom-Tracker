@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="414dp"
+        android:layout_height="680dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/title_home"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="421dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:theme="@style/Widget.BottomNavigationView"
+        app:itemIconSize="20dp"
+        app:itemIconTint="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/navigation" />
+
+    <!--<androidx.cardview.widget.CardView-->
+        <!--android:id="@+id/cardView"-->
+        <!--android:layout_width="154dp"-->
+        <!--android:layout_height="159dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:outlineSpotShadowColor="@color/colorPrimary"-->
+        <!--app:cardBackgroundColor="@color/white"-->
+        <!--app:cardCornerRadius="500dp"-->
+        <!--app:cardElevation="50dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/navigation"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.497"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintVertical_bias="0.376">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_currentStreak"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center|center_vertical"-->
+            <!--android:fontFamily="@font/roboto_mono"-->
+            <!--android:text="0"-->
+            <!--android:textColor="#000000"-->
+            <!--android:textSize="25dp" />-->
+
+    <!--</androidx.cardview.widget.CardView>-->
+
+    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/tv_greeting"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="35dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_marginStart="8dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_marginTop="80dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_marginEnd="8dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:fontFamily="@font/roboto_mono"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="Hey"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textColor="#ffffff"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:textSize="20dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintHorizontal_bias="0.474"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;app:layout_constraintTop_toTopOf="parent" />&ndash;&gt;-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/textView3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:fontFamily="sans-serif-light"-->
+        <!--android:padding="2dp"-->
+        <!--android:text="Here is your current streak"-->
+        <!--android:textColor="#000000"-->
+        <!--android:textSize="20dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/cardView"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintVertical_bias="0.624" />-->
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/textView6"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="39dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:fontFamily="sans-serif-light"-->
+        <!--android:padding="2dp"-->
+        <!--android:text="Countdown for next point"-->
+        <!--android:textColor="#000000"-->
+        <!--android:textSize="20dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/cardView2"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/cardView"-->
+        <!--app:layout_constraintVertical_bias="0.442" />-->
+
+    <!--<androidx.cardview.widget.CardView-->
+        <!--android:id="@+id/cardView2"-->
+        <!--android:layout_width="174dp"-->
+        <!--android:layout_height="65dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginBottom="28dp"-->
+        <!--android:outlineSpotShadowColor="#1cb274"-->
+        <!--app:cardBackgroundColor="@android:color/white"-->
+        <!--app:cardCornerRadius="5dp"-->
+        <!--app:cardElevation="15dp"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/navigation"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.497"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/cardView"-->
+        <!--app:layout_constraintVertical_bias="0.751">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_countDown"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center|center_vertical"-->
+            <!--android:fontFamily="@font/roboto_thin"-->
+            <!--android:text="0"-->
+            <!--android:textColor="#000000"-->
+            <!--android:textSize="25dp"-->
+            <!--android:textStyle="bold" />-->
+
+    <!--</androidx.cardview.widget.CardView>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

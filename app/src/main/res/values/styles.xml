@@ -1,0 +1,45 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:calendarViewStyle">@style/Widget.CalendarView.Custom</item>
+
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="android:fontFamily">@font/averia_sans_libre_light</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+    <style name="AppThemeDark" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary"></item>
+        <item name="colorPrimaryDark"></item>
+        <item name="colorAccent"></item>
+        <item name="colorButtonNormal">#424242</item>
+    </style>
+
+    <style name="PrimaryFlatButton" parent="Theme.AppCompat.Light">
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+
+        <item name ="colorButtonNormal">@color/colorSecondary</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="Widget.BottomNavigationView"
+        parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/roboto_thin</item>
+    </style>
+
+
+    <style name="Widget.CalendarView.Custom" parent="android:Widget.CalendarView">
+        <item name="android:focusedMonthDateColor">@color/colorAccent</item>
+        <item name="android:weekNumberColor">@color/colorSecondary</item>
+        <item name="android:weekDayTextAppearance">@android:color/darker_gray</item>
+        <item name="android:dateTextAppearance">@android:color/darker_gray</item>
+    </style>
+
+</resources>

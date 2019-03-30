@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:state_checked="true" android:color="@android:color/white" />
+        <item android:state_pressed="true" android:state_enabled="true" android:color="@color/colorLight" />
+        <item android:color="@color/InactiveBottomNavIconColor" />
+    </selector>
+</resources>
