@@ -6,6 +6,6 @@
     <color name="colorAccent">#e57373</color>
     <color name="white">#ffffff</color>
     <color name="colorGrey">#424242</color>
+    <color name="lightGrey">#d32f2f</color>
     <color name="colorSecondary">#f57f17</color>
-    <color name="InactiveBottomNavIconColor">#424242</color>
 </resources>

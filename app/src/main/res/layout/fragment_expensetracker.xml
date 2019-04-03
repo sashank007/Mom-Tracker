@@ -23,64 +23,51 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.796" />
 
-    <Spinner
-        android:id="@+id/spinner_expensetype"
-        style="@style/Widget.AppCompat.Spinner.DropDown"
-        android:layout_width="300dp"
-        android:background="@color/white"
-        android:layout_height="46dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="224dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="204dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="Expenditure Type"
+        android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/spinner_expensetype"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.161"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.968" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_exptype"
         android:layout_width="300dp"
-        android:layout_height="55dp"
+        android:layout_height="54dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:textColorHint="@color/colorAccent"
+        android:visibility="visible"
+        app:boxStrokeColor="@color/colorGrey"
         app:layout_constraintBottom_toTopOf="@+id/til_expamount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_expensetype"
-        app:layout_constraintVertical_bias="0.207">
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_expendituretype"
+            android:id="@+id/et_expendituresubtype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="what did you spend on?"
             android:textColor="@color/colorGrey"
-            android:textColorHint="@color/colorGrey" />
+            android:textColorHint="@color/colorAccent" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_expamount"
         android:layout_width="300dp"
         android:layout_height="88dp"
+        android:textColorHint="@color/colorAccent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="20dp"
@@ -96,6 +83,20 @@
             android:hint="how much?"
             android:inputType="number"
             android:textColor="@color/colorGrey"
-            android:textColorHint="@color/colorGrey" />
+            android:textColorHint="@color/colorAccent" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/spinner_expensetype"
+        android:layout_width="299dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="24dp"
+        android:background="@color/colorAccent"
+        android:theme="@style/AlertDialog.AppCompat"
+        app:layout_constraintBottom_toTopOf="@+id/til_exptype"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

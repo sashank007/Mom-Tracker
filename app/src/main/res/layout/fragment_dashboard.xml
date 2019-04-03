@@ -5,6 +5,21 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <CalendarView
+        android:id="@+id/simpleCalendarView"
+        android:layout_width="349dp"
+        android:layout_height="329dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:theme="@android:style/Widget.Material.CalendarView"
+        app:layout_constraintBottom_toTopOf="@+id/tv_spentthismonth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -19,9 +34,10 @@
         app:backgroundTint="@color/colorLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.876"
+        app:layout_constraintHorizontal_bias="0.846"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_spentthismonth" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_spentthismonth"
+        app:layout_constraintVertical_bias="0.345" />
 
     <Button
         android:id="@+id/btn_allexpenses"
@@ -29,42 +45,36 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="Get All Expenses"
         android:textColor="@color/colorSecondary"
         android:textColorLink="@color/colorSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.535"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/fab"
+        app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_totalexpense" />
 
     <TextView
         android:id="@+id/tv_totalexpense"
         android:layout_width="144dp"
         android:layout_height="49dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="440dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="76dp"
         android:gravity="center_horizontal"
-        android:text="TextView"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_allexpenses"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.906" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_spentthismonth"
         android:layout_width="292dp"
-        android:layout_height="27dp"
+        android:layout_height="26dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -77,6 +87,6 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.954" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

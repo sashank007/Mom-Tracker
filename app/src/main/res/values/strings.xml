@@ -1,13 +1,11 @@
 <resources>
-    <string name="app_name">Mom Tracker</string>
+    <string name="app_name">Mom Keeps Track</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="Confirmation_expenditure">You spent more than your maximum amount. Was this expenditure absolutely necessary?</string>
     <string name="login">Login</string>
     <string name="hellya">Hell ya!</string>
     <string name="nope">Nope!</string>
-    <string name="oops">Oops..you just lost your streak!</string>
     <string name="err_msg_amount">You gotta fill in an amount...</string>
     <string-array name="exp_types_array">
     <item>Food</item>
