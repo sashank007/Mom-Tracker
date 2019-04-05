@@ -42,7 +42,6 @@ public class Alarm extends BroadcastReceiver
         // Put here YOUR code.
         endTime  = System.currentTimeMillis();
         totalTime = endTime - startTime;
-        Toast.makeText(context, "Updated streak !!!!!!!!!! : " , Toast.LENGTH_SHORT).show(); // For example
 //        context.startService(new Intent(context, UpdateHoursService.class));
         System.out.println("on receive alarm");
 //        streakUpdater();

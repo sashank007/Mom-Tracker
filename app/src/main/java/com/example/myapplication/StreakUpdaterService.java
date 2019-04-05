@@ -44,7 +44,7 @@ public class StreakUpdaterService extends Service {
     public void onCreate() {
         this.context = this;
         this.isRunning = false;
-
+        pushNotification("Wakeup called"  , "Wakeup");
         if(isMidnight())
             streakUpdater();
 
@@ -77,7 +77,6 @@ public class StreakUpdaterService extends Service {
         mUser = firebaseAuth.getCurrentUser();
         Query myQuery = mDatabase.child("users").child(mUser.getUid());
         myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            List<Expense> myList = new ArrayList<>();
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -134,7 +133,7 @@ public class StreakUpdaterService extends Service {
         notificationBuilder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.mipmap.mom_logo)
                 .setTicker(getString(R.string.app_name))
                 //     .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle(msgTitle)
