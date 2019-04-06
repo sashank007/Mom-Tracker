@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -11,36 +11,30 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.Data.AppDatabase;
-import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.Fragments.DashboardFragment;
+import com.example.myapplication.Fragments.HomeFragment;
+import com.example.myapplication.Fragments.ProfileFragment;
+import com.example.myapplication.Receivers.IncrementReceiver;
+import com.example.myapplication.R;
+import com.example.myapplication.Receivers.SmsListener;
+import com.example.myapplication.Receivers.SmsReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import static android.app.AlarmManager.INTERVAL_HOUR;
-import static com.example.myapplication.LoginActivity.INTENT_FIRST_TIME;
+import static com.example.myapplication.Receivers.IncrementReceiver.REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -121,64 +115,64 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
-
-    private void fireService() {
-
-        editor = sharedPreferences.edit();
-        editor.remove(INTENT_FIRST_TIME);
-        editor.commit();
-
-
-        Intent myIntent = new Intent(this, IncrementReceiver.class);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(  MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        myIntent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
-//        alarmManager.cancel(pendingIntent);
 //
-//        Calendar alarmStartTime = Calendar.getInstance();
-//        Calendar now = Calendar.getInstance();
-//        alarmStartTime.set(Calendar.HOUR_OF_DAY,2);
-//        alarmStartTime.set(Calendar.MINUTE, 49);
-//        alarmStartTime.set(Calendar.SECOND, 0);
-//        if (now.after(alarmStartTime)) {
-//            Log.d("Hey","Added a day");
-//            alarmStartTime.add(Calendar.DATE, 1);
+//    private void fireService() {
+//
+//        editor = sharedPreferences.edit();
+//        editor.remove(INTENT_FIRST_TIME);
+//        editor.commit();
+//
+//
+//        Intent myIntent = new Intent(this, IncrementReceiver.class);
+//
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(  MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+////        myIntent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
+////        alarmManager.cancel(pendingIntent);
+////
+////        Calendar alarmStartTime = Calendar.getInstance();
+////        Calendar now = Calendar.getInstance();
+////        alarmStartTime.set(Calendar.HOUR_OF_DAY,2);
+////        alarmStartTime.set(Calendar.MINUTE, 49);
+////        alarmStartTime.set(Calendar.SECOND, 0);
+////        if (now.after(alarmStartTime)) {
+////            Log.d("Hey","Added a day");
+////            alarmStartTime.add(Calendar.DATE, 1);
+////        }
+////        System.out.println("added a day");
+////        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+////        Log.d("Alarm","Alarms set for everyday 8 am.");
+//
+//
+//        System.out.println("shared pref has INTENT_FIRST_TIME  ? : " + sharedPreferences.contains(INTENT_FIRST_TIME));
+//
+//        Calendar firingCal = Calendar.getInstance();
+//        Calendar currentCal = Calendar.getInstance();
+//
+//        firingCal.set(Calendar.HOUR, 2); // At the hour you wanna fire
+//        firingCal.set(Calendar.MINUTE, 43); // Particular minute
+//        firingCal.set(Calendar.SECOND, 0); // particular second
+//
+//        long intendedTime = firingCal.getTimeInMillis();
+//        long currentTime = currentCal.getTimeInMillis();
+//
+//        if (intendedTime >= currentTime) {
+//            // you can add buffer time too here to ignore some small differences in milliseconds
+//            // set from today
+//            System.out.println("intended time > =  current time "  );
+//            System.out.println("intended time :" + new Date(intendedTime));
+//            System.out.println("current time: " + new Date(currentTime));
+//            alarmManager.setRepeating(AlarmManager.RTC, intendedTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+//        } else {
+//            // set from next day
+//            // you might consider using calendar.add() for adding one day to the current day
+//            firingCal.add(Calendar.DAY_OF_MONTH, 1);
+//            System.out.println("added a day : " + firingCal.toString());
+//            intendedTime = firingCal.getTimeInMillis();
+//            alarmManager.setRepeating(AlarmManager.RTC, currentTime, 1000*60, pendingIntent);
 //        }
-//        System.out.println("added a day");
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-//        Log.d("Alarm","Alarms set for everyday 8 am.");
-
-
-        System.out.println("shared pref has INTENT_FIRST_TIME  ? : " + sharedPreferences.contains(INTENT_FIRST_TIME));
-
-        Calendar firingCal = Calendar.getInstance();
-        Calendar currentCal = Calendar.getInstance();
-
-        firingCal.set(Calendar.HOUR, 2); // At the hour you wanna fire
-        firingCal.set(Calendar.MINUTE, 43); // Particular minute
-        firingCal.set(Calendar.SECOND, 0); // particular second
-
-        long intendedTime = firingCal.getTimeInMillis();
-        long currentTime = currentCal.getTimeInMillis();
-
-        if (intendedTime >= currentTime) {
-            // you can add buffer time too here to ignore some small differences in milliseconds
-            // set from today
-            System.out.println("intended time > =  current time "  );
-            System.out.println("intended time :" + new Date(intendedTime));
-            System.out.println("current time: " + new Date(currentTime));
-            alarmManager.setRepeating(AlarmManager.RTC, intendedTime, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
-        } else {
-            // set from next day
-            // you might consider using calendar.add() for adding one day to the current day
-            firingCal.add(Calendar.DAY_OF_MONTH, 1);
-            System.out.println("added a day : " + firingCal.toString());
-            intendedTime = firingCal.getTimeInMillis();
-            alarmManager.setRepeating(AlarmManager.RTC, currentTime, 1000*60, pendingIntent);
-        }
-    }
+//    }
 
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -261,7 +255,7 @@ public class MainActivity extends AppCompatActivity  {
     private boolean checkAlarmUp()
     {
         boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
-                new Intent(this,IncrementReceiver.class),
+                new Intent(this, IncrementReceiver.class),
                 PendingIntent.FLAG_NO_CREATE) != null);
         return alarmUp;
 
@@ -269,9 +263,9 @@ public class MainActivity extends AppCompatActivity  {
 
     public void scheduleAlarm() {
         // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(getApplicationContext(), Alarm.class);
+        Intent intent = new Intent(getApplicationContext(), IncrementReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, IncrementReceiver.REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every every half hour from this point onwards
         long firstMillis = System.currentTimeMillis(); // alarm is set right away

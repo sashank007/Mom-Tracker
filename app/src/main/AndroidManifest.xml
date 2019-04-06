@@ -19,13 +19,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.myapplication.MainActivity"
+            android:name="com.example.myapplication.Activities.MainActivity"
             android:label="@string/app_name">
 
         </activity>
 
         <activity
-            android:name="com.example.myapplication.LoginActivity"
+            android:name="com.example.myapplication.Activities.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,48 +34,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.myapplication.PieChartActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.example.myapplication.SettingsActivity"
+            android:name="com.example.myapplication.Activities.SettingsActivity"
             android:label="@string/app_name">
 
         </activity>
 
-        <receiver android:name="com.example.myapplication.SmsReceiver">
+        <receiver android:name="com.example.myapplication.Receivers.SmsReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
-        <service android:name="com.example.myapplication.IncrementService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
 
-        </service>
+        <receiver android:process=":remote" android:name="com.example.myapplication.Receivers.IncrementReceiver"></receiver>
 
-        <receiver android:process=":remote" android:name="com.example.myapplication.Alarm"></receiver>
 
-        <service
-            android:name="com.example.myapplication.JobServiceActivity"
-            android:label="Word service"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
-
-        </service>
-
-        <receiver
-            android:name=".IncrementReceiver"
-            android:process=":remote" >
-        </receiver>
-        <service android:name=".StreakUpdaterService" />
-        <service
-            android:name=".MyTestService"
-            android:exported="false" />
+        <service android:name=".Services.StreakUpdaterService" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

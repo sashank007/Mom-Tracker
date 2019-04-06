@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,8 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myapplication.Data.AppDatabase;
-import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.Activities.MainActivity;
+import com.example.myapplication.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Receivers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,10 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
-import android.widget.Toast;
 
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.Services.StreakUpdaterService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,11 +24,11 @@ import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.room.Database;
 
-public class Alarm extends BroadcastReceiver
+public class IncrementReceiver extends BroadcastReceiver
 {
     long endTime = 0 , startTime =0 , totalTime=0;
+    public static final int REQUEST_CODE = 12345;
     private DatabaseReference mDatabase;
     private FirebaseUser mUser;
     private FirebaseAuth firebaseAuth;
@@ -53,7 +53,7 @@ public class Alarm extends BroadcastReceiver
     public void setAlarm(Context context)
     {
 //        AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, Alarm.class);
+        Intent i = new Intent(context, IncrementReceiver.class);
 //
 //        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
 //        startTime = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class Alarm extends BroadcastReceiver
         calendar.set(Calendar.SECOND, 0);
         System.out.println("calendar:" + calendar.toString());
         PendingIntent pi = PendingIntent.getBroadcast(context, 0,
-                new Intent(context, Alarm.class),PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent(context, IncrementReceiver.class),PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pi);
@@ -74,7 +74,7 @@ public class Alarm extends BroadcastReceiver
 
     public void cancelAlarm(Context context)
     {
-        Intent intent = new Intent(context, Alarm.class);
+        Intent intent = new Intent(context, IncrementReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);

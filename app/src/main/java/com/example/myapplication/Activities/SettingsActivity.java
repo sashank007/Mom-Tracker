@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,11 +11,12 @@ import android.widget.Toast;
 
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.R;
 
 import androidx.room.Room;
 
-import static com.example.myapplication.LoginActivity.INTENT_EMAIL;
-import static com.example.myapplication.LoginActivity.INTENT_SETTINGS;
+import static com.example.myapplication.Activities.LoginActivity.INTENT_EMAIL;
+import static com.example.myapplication.Activities.LoginActivity.INTENT_SETTINGS;
 
 public class SettingsActivity extends Activity {
     Button done;

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -59,7 +59,7 @@ public class ExpensesListFragment extends Fragment {
     private void getExpenses() {
 
         Query myQuery = mDatabase.child("expenses").child(mUser.getUid());
-        myQuery.addValueEventListener(new ValueEventListener() {
+        myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             List<Expense> myList = new ArrayList<>();
 
             @Override
@@ -83,7 +83,7 @@ public class ExpensesListFragment extends Fragment {
 
     private void updateExpensesList(List<Expense> myList)
     {
-
+        System.out.println("my list:" + myList);
         ExpenseAdapter adapter = new ExpenseAdapter(getActivity(), R.layout.listview_item, myList);
         listView.setAdapter(adapter);
     }

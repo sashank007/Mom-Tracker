@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Services;
 
 
 import android.app.*;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -85,7 +86,6 @@ public class StreakUpdaterService extends Service {
                 System.out.println("current user :" + currentUser.currentStreak);
                 int currentStreak = currentUser.currentStreak;
                 updateStreak(currentStreak);
-
 
             }
 

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +15,8 @@ import android.widget.Spinner;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.Activities.MainActivity;
+import com.example.myapplication.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ public class ExpenseTrackerFragment extends Fragment {
     AppDatabase db;
     Button done;
     int expenditureValue ;
+    private int maxSpendingValue;
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
     String expenditureTypeValue , expenditureSubTypeValue;
@@ -85,8 +87,8 @@ public class ExpenseTrackerFragment extends Fragment {
                     //update expenses in firebase
                     Expense newExpense = new Expense(expenditureTypeValue , expenditureValue , System.currentTimeMillis() , expenditureSubTypeValue);
                     updateExpenses(newExpense);
-//                    if (exceedsBudget())
-//                        showDialog();
+                    if (exceedsBudget())
+                        showDialog();
 
 
                     switchFragment(new DashboardFragment());
@@ -114,8 +116,9 @@ public class ExpenseTrackerFragment extends Fragment {
     }
     public boolean exceedsBudget()
     {
-        int expAmount =expenditureValue;
-        if (expAmount>currentUser.maxSpending)
+        getMaxSpendingAmount();
+        int expAmount = expenditureValue;
+        if (expAmount>maxSpendingValue)
         {
             return true;
         }
@@ -149,10 +152,6 @@ public class ExpenseTrackerFragment extends Fragment {
         dropdown.setAdapter(adapter);
     }
 
-    private void updateUIExpense(int exp)
-    {
-
-    }
     private boolean submitForm()
     {
         if(!validateAmount())
@@ -178,5 +177,37 @@ public class ExpenseTrackerFragment extends Fragment {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+    private void getMaxSpendingAmount()
+    {
+        Query myTopPostsQuery = mDatabase.child("users").child(mUser.getUid());
 
+        // [START basic_query_value_listener]
+        // My top posts by number of stars
+        myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                  int exp=0;
+                                                  @Override
+                                                  public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                          exp = Integer.parseInt(dataSnapshot.child("maxSpending").getValue().toString());
+
+                                                      updateMaxSpending(exp);
+                                                  }
+
+                                                  @Override
+                                                  public void onCancelled(DatabaseError databaseError) {
+                                                      // Getting Post failed, log a message
+                                                      Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                                      // ...
+                                                  }
+
+                                              }
+
+        );
+    }
+
+    private void updateMaxSpending(int exp)
+    {
+        this.maxSpendingValue = exp;
+
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,11 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.R;
 import com.firebase.ui.auth.ui.email.TroubleSigningInFragment;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -45,7 +45,6 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.myapplication.MainActivity.TAG;
 
 public class ProfileFragment extends Fragment {
     TextView tv_userName,tv_maxSpending ,tv_email ;

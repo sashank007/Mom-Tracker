@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Fragments;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
+import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
