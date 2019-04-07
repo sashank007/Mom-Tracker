@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Alarm;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.Fragments.DashboardFragment;
@@ -33,8 +34,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import static com.example.myapplication.Receivers.IncrementReceiver.REQUEST_CODE;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -94,7 +93,8 @@ public class MainActivity extends AppCompatActivity  {
         sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         currentStreak = findViewById(R.id.tv_currentStreak);
         System.out.println("alarm up : ? " + checkAlarmUp());
-        scheduleAlarm();
+//        if(!checkAlarmUp())
+            scheduleAlarm();
 //        streakUpdater();
 
        SmsReceiver.bindListener(new SmsListener() {
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
+
 //
 //    private void fireService() {
 //
@@ -257,25 +258,41 @@ public class MainActivity extends AppCompatActivity  {
         boolean alarmUp = (PendingIntent.getBroadcast(this, 0,
                 new Intent(this, IncrementReceiver.class),
                 PendingIntent.FLAG_NO_CREATE) != null);
+        System.out.println("alarm is up  ?  : " + alarmUp);
         return alarmUp;
 
     }
+//
+//    public void scheduleAlarm() {
+//        // Construct an intent that will execute the AlarmReceiver
+//        Intent intent = new Intent(getApplicationContext(), IncrementReceiver.class);
+//        // Create a PendingIntent to be triggered when the alarm goes off
+//        final PendingIntent pIntent = PendingIntent.getBroadcast(this, REQUEST_CODE,
+//                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        // Setup periodic alarm every every half hour from this point onwards
+//        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+//        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+//        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+//        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+//        alarm.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+//                30000, pIntent);
+//
+//    }
 
     public void scheduleAlarm() {
         // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(getApplicationContext(), IncrementReceiver.class);
+        Intent intent = new Intent(getApplicationContext(), Alarm.class);
         // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, REQUEST_CODE,
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, IncrementReceiver.REQUEST_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         // Setup periodic alarm every every half hour from this point onwards
         long firstMillis = System.currentTimeMillis(); // alarm is set right away
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
-        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                AlarmManager.INTERVAL_HOUR, pIntent);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                30000, pIntent);
     }
-
 
 
     private void updateStreak(int newStreak)

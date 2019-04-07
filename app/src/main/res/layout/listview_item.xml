@@ -6,10 +6,9 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="357dp"
-        android:layout_height="73dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,21 +25,21 @@
 
             <TextView
                 android:id="@+id/tv_expenseamountindiv"
-                android:layout_width="63dp"
-                android:layout_height="26dp"
+                android:layout_width="90dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="96dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="TextView"
-                android:textColor="#000000"
-                android:textSize="14sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_expensedateindiv"
-                app:layout_constraintHorizontal_bias="0.044"
+                app:layout_constraintHorizontal_bias="0.158"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.159" />
 
             <TextView
                 android:id="@+id/tv_expensetypeindiv"
@@ -51,14 +50,14 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="TextView"
-                android:textColor="#000000"
+                android:textColor="@color/greyLighter"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintHorizontal_bias="0.138"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.885" />
+                app:layout_constraintVertical_bias="0.87" />
 
             <TextView
                 android:id="@+id/tv_expensedateindiv"
@@ -69,7 +68,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="TextView"
-                android:textColor="#000000"
+                android:textColor="@color/greyLighter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -79,8 +78,8 @@
 
             <ImageView
                 android:id="@+id/iv_expensetrackericon"
-                android:layout_width="46dp"
-                android:layout_height="48dp"
+                android:layout_width="76dp"
+                android:layout_height="70dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"

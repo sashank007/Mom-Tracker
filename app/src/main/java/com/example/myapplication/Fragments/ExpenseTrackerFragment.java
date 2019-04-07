@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.Expense;
@@ -27,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -43,8 +46,10 @@ public class ExpenseTrackerFragment extends Fragment {
     Button done;
     int expenditureValue ;
     private int maxSpendingValue;
+    TextView tvDate;
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
+    private long selectedDate;
     String expenditureTypeValue , expenditureSubTypeValue;
     User currentUser;
     Spinner dropdown;
@@ -64,11 +69,16 @@ public class ExpenseTrackerFragment extends Fragment {
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentUser = db.userDao().findByName(MainActivity.firstName , MainActivity.lastName);
-
+        selectedDate= getArguments().getLong("DateSelected");
+        System.out.print("got selected date in expense tracker: " + selectedDate);
         LayoutInflater lf = getActivity().getLayoutInflater();
         View v = lf.inflate ( R.layout.fragment_expensetracker, container, false );
         dropdown = v.findViewById(R.id.spinner_expensetype);
+        tvDate = v.findViewById(R.id.tv_date);
+        DateFormat spf= new SimpleDateFormat("dd MMM yyyy");
+        tvDate.setText("Creating an expense for " + spf.format(selectedDate));
         getType();
+        getMaxSpendingAmount();
         et_expenditureAmount = v.findViewById(R.id.et_expenditureamount);
         et_expenditureSubType = v.findViewById(R.id.et_expendituresubtype);
         til_expenditureAmount = v.findViewById(R.id.til_expamount);
@@ -85,7 +95,7 @@ public class ExpenseTrackerFragment extends Fragment {
 //                    updateExpenses(expenditureTypeValue, expenditureValue);
 
                     //update expenses in firebase
-                    Expense newExpense = new Expense(expenditureTypeValue , expenditureValue , System.currentTimeMillis() , expenditureSubTypeValue);
+                    Expense newExpense = new Expense(expenditureTypeValue , expenditureValue , selectedDate, expenditureSubTypeValue);
                     updateExpenses(newExpense);
                     if (exceedsBudget())
                         showDialog();
@@ -116,8 +126,9 @@ public class ExpenseTrackerFragment extends Fragment {
     }
     public boolean exceedsBudget()
     {
-        getMaxSpendingAmount();
         int expAmount = expenditureValue;
+        System.out.print("exp amount : " + expAmount );
+        System.out.print("maxSpendingValue : " + maxSpendingValue);
         if (expAmount>maxSpendingValue)
         {
             return true;
@@ -138,7 +149,6 @@ public class ExpenseTrackerFragment extends Fragment {
 
 
     }
-
 
     private void getType()
     {
@@ -177,6 +187,7 @@ public class ExpenseTrackerFragment extends Fragment {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
     private void getMaxSpendingAmount()
     {
         Query myTopPostsQuery = mDatabase.child("users").child(mUser.getUid());
@@ -188,9 +199,10 @@ public class ExpenseTrackerFragment extends Fragment {
                                                   @Override
                                                   public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                                          exp = Integer.parseInt(dataSnapshot.child("maxSpending").getValue().toString());
-
-                                                      updateMaxSpending(exp);
+                                                          User user  = dataSnapshot.getValue(User.class);
+                                                          exp=user.maxSpending;
+                                                          System.out.print("maxSpendingValue  :" + exp );
+                                                          updateMaxSpending(exp);
                                                   }
 
                                                   @Override

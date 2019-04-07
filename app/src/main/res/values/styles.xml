@@ -19,7 +19,7 @@
         <item name="android:focusedMonthDateColor">@color/colorAccent</item>
         <item name="android:weekNumberColor">@color/colorSecondary</item>
         <item name="android:weekDayTextAppearance">@android:color/darker_gray</item>
-        <item name="android:dateTextAppearance">@android:color/darker_gray</item>
+        <item name="android:dateTextAppearance">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

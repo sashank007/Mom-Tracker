@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment {
     private float bills , supplies , food , fun;
     final ArrayList<Float> expenses = new ArrayList<Float>();
     String types[] = {"bills" , "fun" , "food", "supplies"};
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LayoutInflater lf = getActivity().getLayoutInflater();
         View v = lf.inflate ( R.layout.fragment_profile, container, false );

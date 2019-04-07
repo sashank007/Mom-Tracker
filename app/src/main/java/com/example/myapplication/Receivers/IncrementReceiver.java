@@ -6,10 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
+import android.widget.Toast;
 
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
-import com.example.myapplication.Services.StreakUpdaterService;
+import com.example.myapplication.StreakUpdaterService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +40,7 @@ public class IncrementReceiver extends BroadcastReceiver
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "myapp:wakelock");
         wl.acquire();
 //
+        Toast.makeText(context , "Increment Receiver called" , Toast.LENGTH_LONG).show();
         // Put here YOUR code.
         endTime  = System.currentTimeMillis();
         totalTime = endTime - startTime;

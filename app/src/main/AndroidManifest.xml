@@ -45,10 +45,12 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:process=":remote" android:name="com.example.myapplication.Receivers.IncrementReceiver"></receiver>
+        <service android:name="com.example.myapplication.StreakUpdaterService" android:enabled="true"  />
 
-
-        <service android:name=".Services.StreakUpdaterService" />
+        <receiver android:process=":remote"
+            android:name=".Alarm"
+            android:enabled="true"
+            android:exported="true" ></receiver>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

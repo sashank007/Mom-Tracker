@@ -1,17 +1,23 @@
 package com.example.myapplication.Fragments;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.Data.AppDatabase;
+import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.Activities.MainActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.Utils.Util;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -42,6 +50,8 @@ public class DashboardFragment extends Fragment {
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser mUser;
+    private Date selectedDate;
+    private CaldroidFragment caldroidFragment;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LayoutInflater lf = getActivity().getLayoutInflater();
         View v = lf.inflate ( R.layout.fragment_dashboard, container, false );
@@ -51,15 +61,33 @@ public class DashboardFragment extends Fragment {
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
+        selectedDate= new Date(System.currentTimeMillis());
+        System.out.print("current date: " + selectedDate);
         firebaseAuth  = FirebaseAuth.getInstance();
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentUser = db.userDao().findByName(MainActivity.firstName , MainActivity.lastName);
         totalExpense = v.findViewById(R.id.tv_totalexpense);
         retrieveExpenses();
+
+        caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+
+        caldroidFragment.setArguments(args);
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.calendar_container, caldroidFragment)
+                .commit();
+        calendarListener();
+
         allExpenses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 switchFragment(new ExpensesListFragment());
             }
         });
@@ -71,6 +99,8 @@ public class DashboardFragment extends Fragment {
                switchFragment(new ExpenseTrackerFragment());
             }
         });
+
+
         return v;
 
 
@@ -78,6 +108,9 @@ public class DashboardFragment extends Fragment {
 
     public void switchFragment(Fragment fragment)
     {
+        Bundle args = new Bundle();
+        args.putLong("DateSelected", selectedDate.getTime());
+        fragment.setArguments(args);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -91,17 +124,21 @@ public class DashboardFragment extends Fragment {
 
         // [START basic_query_value_listener]
         // My top posts by number of stars
-        myTopPostsQuery.addValueEventListener(new ValueEventListener() {
+        myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                   int exp=0;
+                                  long chosenDate=0;
                                   @Override
                                   public void onDataChange(DataSnapshot dataSnapshot) {
 
                                       for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                                           // TODO: handle the post
+                                          Expense currExp = postSnapshot.getValue(Expense.class);
                                           System.out.println("snapshot: " + postSnapshot.child("amount").getValue());
-                                          exp +=Integer.parseInt( postSnapshot.child("amount").getValue().toString());
-                                          System.out.println("post snapshot:" + postSnapshot.toString());
-
+//                                          exp +=Integer.parseInt( postSnapshot.child("amount").getValue().toString());
+                                          exp+=currExp.amount;
+                                          System.out.println("post snapshot:" +currExp);
+                                          chosenDate =  currExp.currentDate;
+                                          colorDate(chosenDate);
                                       }
 
                                       updateUIExpense(exp);
@@ -119,6 +156,13 @@ public class DashboardFragment extends Fragment {
         );
     }
 
+    private void colorDate(long millis)
+    {
+        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.colorSecondary));
+        caldroidFragment.setBackgroundDrawableForDate(blue, new Date(millis));
+        caldroidFragment.refreshView();
+
+    }
     public String getMonth( long millis)
     {
         Date date = new Date(millis);
@@ -158,5 +202,42 @@ public class DashboardFragment extends Fragment {
     private void updateUIExpense(int exp)
     {
         totalExpense.setText(" $" + Integer.toString(exp));
+    }
+
+    private void calendarListener()
+    {
+        final CaldroidListener listener = new CaldroidListener() {
+
+            @Override
+            public void onSelectDate(Date date, View view) {
+                caldroidFragment.clearSelectedDates();
+                caldroidFragment.setSelectedDate(date);
+//                caldroidFragment.setTextColorForDate(R.color.colorAccent, date);
+                caldroidFragment.refreshView();
+                selectedDate =date;
+            }
+
+            @Override
+            public void onChangeMonth(int month, int year) {
+                String text = "month: " + month + " year: " + year;
+
+            }
+
+            @Override
+            public void onLongClickDate(Date date, View view) {
+
+            }
+
+            @Override
+            public void onCaldroidViewCreated() {
+
+                caldroidFragment.setSelectedDate(selectedDate);
+                caldroidFragment.refreshView();
+
+            }
+
+        };
+
+        caldroidFragment.setCaldroidListener(listener);
     }
 }

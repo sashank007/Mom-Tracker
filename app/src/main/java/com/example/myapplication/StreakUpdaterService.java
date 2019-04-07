@@ -1,4 +1,4 @@
-package com.example.myapplication.Services;
+package com.example.myapplication;
 
 
 import android.app.*;
@@ -45,9 +45,7 @@ public class StreakUpdaterService extends Service {
     public void onCreate() {
         this.context = this;
         this.isRunning = false;
-        pushNotification("Wakeup called"  , "Wakeup");
-        if(isMidnight())
-            streakUpdater();
+
 
     }
 
@@ -58,18 +56,23 @@ public class StreakUpdaterService extends Service {
         }
     };
 
-    @Override
-    public void onDestroy() {
-        this.isRunning = false;
-    }
+    //    @Override
+    ////    public void onDestroy() {
+    ////        this.isRunning = false;
+    ////    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(!this.isRunning) {
-            this.isRunning = true;
-
-        }
-        return START_STICKY;
+//        if(!this.isRunning) {
+//            this.isRunning = true;
+//
+//        }
+        super.onStartCommand(intent, flags, startId);
+        Toast.makeText(this , "on create in streak updater" , Toast.LENGTH_LONG).show();
+        pushNotification("Wakeup called"  , "Wakeup");
+//        if(isMidnight())
+        streakUpdater();
+        return START_NOT_STICKY;
     }
 
     private void streakUpdater() {
