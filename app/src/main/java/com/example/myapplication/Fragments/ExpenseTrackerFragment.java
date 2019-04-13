@@ -61,14 +61,11 @@ public class ExpenseTrackerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        db = Room.databaseBuilder(getActivity(), AppDatabase.class, "production")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build();
+
         firebaseAuth  = FirebaseAuth.getInstance();
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        currentUser = db.userDao().findByName(MainActivity.firstName , MainActivity.lastName);
+
         selectedDate= getArguments().getLong("DateSelected");
         System.out.print("got selected date in expense tracker: " + selectedDate);
         LayoutInflater lf = getActivity().getLayoutInflater();

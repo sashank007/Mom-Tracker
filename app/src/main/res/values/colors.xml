@@ -11,4 +11,5 @@
     <color name="colorSecondary">#f57f17</color>
     <color name="colorCalendarExpense">#7E57C2</color>
     <color name="colorCalendarExceedsExpense">#EF5350</color>
+    <color name="selectedDate">#29B6F6</color>
 </resources>

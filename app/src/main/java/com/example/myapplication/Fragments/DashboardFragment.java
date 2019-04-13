@@ -2,6 +2,7 @@ package com.example.myapplication.Fragments;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.myapplication.Activities.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.Utils.Util;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,12 +32,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static com.example.myapplication.Activities.MainActivity.CurrentUserMaxSpendingAmount;
 import static com.firebase.ui.auth.ui.email.TroubleSigningInFragment.TAG;
@@ -46,7 +54,7 @@ public class DashboardFragment extends Fragment {
             "December"};
     AppDatabase db;
     User currentUser;
-    TextView totalExpense;
+    TextView totalExpense , tv_spentThisMonth;
     private int totalExpenseVal =0;
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
@@ -54,23 +62,28 @@ public class DashboardFragment extends Fragment {
     private Date selectedDate;
     private CaldroidFragment caldroidFragment;
     private int maxSpendingAmount;
+    private boolean isFirstDate=true;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private Date firstDate = new Date() , secondDate = new Date();
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LayoutInflater lf = getActivity().getLayoutInflater();
         View v = lf.inflate ( R.layout.fragment_dashboard, container, false );
         FloatingActionButton fab = v.findViewById(R.id.fab);
         Button allExpenses = v.findViewById(R.id.btn_allexpenses);
-        db = Room.databaseBuilder(getActivity(), AppDatabase.class, "production")
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .build();
+
         selectedDate= new Date(System.currentTimeMillis());
         System.out.print("current date: " + selectedDate);
         firebaseAuth  = FirebaseAuth.getInstance();
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        currentUser = db.userDao().findByName(MainActivity.firstName , MainActivity.lastName);
         totalExpense = v.findViewById(R.id.tv_totalexpense);
-        retrieveExpenses();
+        tv_spentThisMonth = v.findViewById(R.id.tv_spentthismonth);
+        Calendar c = Calendar.getInstance();   // this takes current date
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        int maxDay = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH);
+        Calendar c2= Calendar.getInstance();
+        c2.set(Calendar.DAY_OF_MONTH,maxDay);
+        retrieveExpenses(c.getTime() , c2.getTime());
         getMaxSpendingAmount();
 
         caldroidFragment = new CaldroidFragment();
@@ -103,9 +116,7 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-
         return v;
-
 
     }
 
@@ -120,7 +131,7 @@ public class DashboardFragment extends Fragment {
                 .commit();
     }
 
-    private void retrieveExpenses()
+    private void retrieveExpenses(final Date dateFrom , final Date dateTo)
     {
         int totalExp = 0;
         Query myTopPostsQuery = mDatabase.child("expenses").child(mUser.getUid());
@@ -138,7 +149,10 @@ public class DashboardFragment extends Fragment {
                                           Expense currExp = postSnapshot.getValue(Expense.class);
                                           System.out.println("snapshot: " + postSnapshot.child("amount").getValue());
 //                                          exp +=Integer.parseInt( postSnapshot.child("amount").getValue().toString());
-                                          exp+=currExp.amount;
+                                          long millisFrom = dateFrom.getTime();
+                                          long millisTo = dateTo.getTime();
+                                          if(currExp.currentDate>=millisFrom &&currExp.currentDate<millisTo)
+                                            exp+=currExp.amount;
                                           System.out.println("post snapshot:" +currExp);
                                           chosenDate =  currExp.currentDate;
                                           if(currExp.amount>CurrentUserMaxSpendingAmount)
@@ -228,7 +242,9 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onSelectDate(Date date, View view) {
                 caldroidFragment.clearSelectedDates();
+                ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.selectedDate));
                 caldroidFragment.setSelectedDate(date);
+//                caldroidFragment.setBackgroundDrawableForDate(blue,date);
 //                caldroidFragment.setTextColorForDate(R.color.colorAccent, date);
                 caldroidFragment.refreshView();
                 selectedDate =date;
@@ -242,6 +258,34 @@ public class DashboardFragment extends Fragment {
 
             @Override
             public void onLongClickDate(Date date, View view) {
+
+              if(isFirstDate) {
+                  caldroidFragment.setSelectedDate(selectedDate);
+                  caldroidFragment.refreshView();
+                  showSnackBar(getActivity().findViewById(R.id.fragment_container), "Long click any other date ahead of time..");
+                  isFirstDate=false;
+                  firstDate = date;
+              }
+              else
+              {
+                  System.out.println("got first date and second: " + firstDate.toString() + " " +  secondDate.toString());
+                  secondDate=date;
+                  isFirstDate=true;
+//                  HashMap<Date, Drawable> colorMap = new HashMap<>();
+//                  ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.selectedDate));
+//                  List<Date> datesList = getDaysBetweenDates(firstDate,secondDate);
+//                  for(int i = 0 ; i<datesList.size();i++)
+//                  {
+//                      colorMap.put(datesList.get(i),blue);
+//
+//                  }
+
+//                  caldroidFragment.setBackgroundDrawableForDates(colorMap);
+                  caldroidFragment.setSelectedDates(firstDate,secondDate);
+
+                  caldroidFragment.refreshView();
+                  fetchCalendarPeriodExpense(firstDate,secondDate);
+              }
 
             }
 
@@ -289,5 +333,30 @@ public class DashboardFragment extends Fragment {
     public void updateMaxSpendingValue(int val)
     {
         this.maxSpendingAmount  = val;
+    }
+
+    public void showSnackBar(final View parent, final String text) {
+        Snackbar sb = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
+        sb.show();
+    }
+    public void fetchCalendarPeriodExpense(Date firstDate , Date secondDate)
+    {
+        retrieveExpenses(firstDate,secondDate);
+        tv_spentThisMonth.setText("Here is how much you spent in this period");
+
+    }
+    public static List<Date> getDaysBetweenDates(Date startdate, Date enddate)
+    {
+        List<Date> dates = new ArrayList<Date>();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+
+        while (calendar.getTime().before(enddate))
+        {
+            Date result = calendar.getTime();
+            dates.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+        return dates;
     }
 }

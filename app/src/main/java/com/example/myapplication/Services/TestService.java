@@ -47,10 +47,9 @@ public class TestService extends JobService
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mUser = firebaseAuth.getCurrentUser();
             Log.i(TAG, "onStartJob: my job service class is called.");
-    //        Toast.makeText(this, "Job service called" , Toast.LENGTH_LONG).show();
-        // enter the task you want to perform.
-//        Log.i("STREAK UPDATE SERVICE","called streak update");
         StatFs statFs = new StatFs(Environment.getRootDirectory().getPath());
+        if(checkUpdateExpenses())
+            pushNotification("Did you fill in your expenses for the day?" , "Mom sent you a message:");
         if(isMidnight())
             streakUpdater();
         Log.i("STREAK UPDATE SERVICE",
@@ -81,7 +80,10 @@ public class TestService extends JobService
                 User currentUser  = dataSnapshot.getValue(User.class) ;
                 System.out.println("current user :" + currentUser.currentStreak);
                 int currentStreak = currentUser.currentStreak;
+                int highestStreak = currentUser.highestStreak;
                 updateStreak(currentStreak);
+                if(currentStreak+1>highestStreak)
+                    highestStreakUpdated(currentStreak+1);
 
             }
 
@@ -91,12 +93,22 @@ public class TestService extends JobService
             }
         });
     }
+
+
     private void updateStreak(int currStreak)
     {
         int newStreak = currStreak+1;
         mDatabase.child("users").child(mUser.getUid()).child("currentStreak").setValue(newStreak);
         Toast.makeText(this, "Updated streak!!!!!!" , Toast.LENGTH_LONG).show();
         pushNotification("Updated your streak : " + newStreak , "Mom sent you a message:");
+    }
+    private boolean checkUpdateExpenses()
+    {
+        Calendar rightNow = Calendar.getInstance();
+        int currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
+        if(currentHourIn24Format==18)
+            return true;
+        return false;
     }
 
     private boolean isMidnight()
@@ -142,5 +154,11 @@ public class TestService extends JobService
                 .setContentInfo("Info");
 
         notificationManager.notify(/*notification id*/1, notificationBuilder.build());
+    }
+
+    private void highestStreakUpdated(int newStreak)
+    { mDatabase.child("users").child(mUser.getUid()).child("highestStreak").setValue(newStreak);
+        pushNotification("Way to go honey you just got a new max streak : " + newStreak , "Mom sent you a message:");
+
     }
 }

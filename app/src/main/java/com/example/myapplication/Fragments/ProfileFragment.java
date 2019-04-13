@@ -84,14 +84,28 @@ public class ProfileFragment extends Fragment {
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
+
         retrieveExpenses();
         populateValues();
         currentUser = db.userDao().findByName(firstName , lastName);
         fetchImage();
         imagePicker();
+//
         return v;
     }
 
+
+    private void showItems()
+    {
+        tv_email.setVisibility(View.VISIBLE);
+        tv_maxSpending.setVisibility(View.VISIBLE);
+        profilePic.setVisibility(View.VISIBLE);
+        profilePicButton.setVisibility(View.VISIBLE);
+        chart.setVisibility(View.VISIBLE);
+        tv_userName.setVisibility(View.VISIBLE);
+
+
+    }
 
     private void retrieveExpenses()
     {
@@ -202,7 +216,9 @@ public class ProfileFragment extends Fragment {
                 picturePath=dataSnapshot.child("profilePic").getValue().toString();
               if(!picturePath.equals(""))
                   profilePic.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+              showItems();
           }
+
 
           @Override
           public void onCancelled(@NonNull DatabaseError databaseError) {
