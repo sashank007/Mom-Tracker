@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Receivers;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -6,6 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.example.myapplication.Services.BackgroundService;
+import com.example.myapplication.Services.NotificationIntentService;
+import com.example.myapplication.Services.StreakUpdaterService;
+import com.example.myapplication.Services.TestService;
 
 import java.util.Calendar;
 
@@ -16,6 +23,7 @@ public class Alarm extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {
+
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "myapp:wakelock");
         wl.acquire();
@@ -23,9 +31,11 @@ public class Alarm extends BroadcastReceiver
         // Put here YOUR code.
         endTime  = System.currentTimeMillis();
         totalTime = endTime - startTime;
-        Intent background = new Intent(context , StreakUpdaterService.class);
-        context.startService(background);
-//        Toast.makeText(context, "Alarm !!!!!!!!!! : " + (endTime), Toast.LENGTH_LONG).show(); // For example
+        Log.d("ALARM","Alarm!!!!!!");
+        Toast.makeText(context, "Welcome --------1", Toast.LENGTH_LONG).show();
+//        Intent background = new Intent(context , NotificationIntentService.class);
+//        context.startService(background);
+        // For example
 //        updateDb(context);
 //        context.startService(new Intent(context , StreakUpdaterService.class));
 //        context.startService(new Intent(context, UpdateHoursService.class));

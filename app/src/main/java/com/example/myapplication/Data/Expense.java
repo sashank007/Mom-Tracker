@@ -37,6 +37,9 @@ public class Expense {
     @ColumnInfo(name="uid")
     public int uid;
 
-
+    public long getCurrentDate()
+    {
+        return this.currentDate;
+    }
 
 }

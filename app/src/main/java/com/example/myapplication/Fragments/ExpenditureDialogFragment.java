@@ -19,6 +19,7 @@ public class ExpenditureDialogFragment extends DialogFragment {
     FirebaseAuth firebaseAuth;
     DatabaseReference mDatabase;
     FirebaseUser mUser;
+    private static int ZERO =0;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -41,7 +42,6 @@ public class ExpenditureDialogFragment extends DialogFragment {
 
                     }
                 });
-        // Create the AlertDialog object and return it
         return builder.create();
     }
     public void showSnackBar(final View parent, final String text) {
@@ -51,7 +51,7 @@ public class ExpenditureDialogFragment extends DialogFragment {
     private void removeStreak()
     {
         System.out.println("streak removed");
-        mDatabase.child(mUser.getUid()).child("currentStreak").setValue(0);
+        mDatabase.child("users").child(mUser.getUid()).child("currentStreak").setValue(ZERO);
         showSnackBar(getActivity().findViewById(R.id.fragment_container) , "Oops..wrong decision. Your streak is now 0!");
     }
 }

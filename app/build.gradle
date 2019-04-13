@@ -33,6 +33,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.joooonho:selectableroundedimageview:1.0.1'
     implementation 'com.roomorama:caldroid:3.0.1'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     def room_version = "2.1.0-alpha04"
 
     implementation "androidx.room:room-runtime:$room_version"

@@ -37,6 +37,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
+import static com.example.myapplication.Activities.MainActivity.CurrentUserMaxSpendingAmount;
 import static com.firebase.ui.auth.ui.email.TroubleSigningInFragment.TAG;
 
 public class DashboardFragment extends Fragment {
@@ -52,6 +53,7 @@ public class DashboardFragment extends Fragment {
     private FirebaseUser mUser;
     private Date selectedDate;
     private CaldroidFragment caldroidFragment;
+    private int maxSpendingAmount;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LayoutInflater lf = getActivity().getLayoutInflater();
         View v = lf.inflate ( R.layout.fragment_dashboard, container, false );
@@ -69,6 +71,7 @@ public class DashboardFragment extends Fragment {
         currentUser = db.userDao().findByName(MainActivity.firstName , MainActivity.lastName);
         totalExpense = v.findViewById(R.id.tv_totalexpense);
         retrieveExpenses();
+        getMaxSpendingAmount();
 
         caldroidFragment = new CaldroidFragment();
         Bundle args = new Bundle();
@@ -138,7 +141,11 @@ public class DashboardFragment extends Fragment {
                                           exp+=currExp.amount;
                                           System.out.println("post snapshot:" +currExp);
                                           chosenDate =  currExp.currentDate;
-                                          colorDate(chosenDate);
+                                          if(currExp.amount>CurrentUserMaxSpendingAmount)
+                                              colorExceeds(chosenDate);
+                                          else
+                                              colorDate(chosenDate);
+
                                       }
 
                                       updateUIExpense(exp);
@@ -158,8 +165,18 @@ public class DashboardFragment extends Fragment {
 
     private void colorDate(long millis)
     {
-        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.colorSecondary));
+        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.colorCalendarExpense));
         caldroidFragment.setBackgroundDrawableForDate(blue, new Date(millis));
+        caldroidFragment.setTextColorForDate(R.color.white,new Date(millis));
+        caldroidFragment.refreshView();
+
+    }
+
+    private void colorExceeds(long millis)
+    {
+        ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.colorCalendarExceedsExpense));
+        caldroidFragment.setBackgroundDrawableForDate(blue, new Date(millis));
+        caldroidFragment.setTextColorForDate(R.color.white,new Date(millis));
         caldroidFragment.refreshView();
 
     }
@@ -239,5 +256,38 @@ public class DashboardFragment extends Fragment {
         };
 
         caldroidFragment.setCaldroidListener(listener);
+    }
+
+    private void getMaxSpendingAmount()
+    {
+        Query myTopPostsQuery = mDatabase.child("users").child(mUser.getUid());
+
+        // [START basic_query_value_listener]
+        // My top posts by number of stars
+        myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                           int exp=0;
+                                                           @Override
+                                                           public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                                               User user  = dataSnapshot.getValue(User.class);
+                                                               exp=user.maxSpending;
+                                                               System.out.print("maxSpendingValue  :" + exp );
+                                                              updateMaxSpendingValue(exp);
+                                                           }
+
+                                                           @Override
+                                                           public void onCancelled(DatabaseError databaseError) {
+                                                               // Getting Post failed, log a message
+                                                               Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                                               // ...
+                                                           }
+
+                                                       }
+
+        );
+    }
+    public void updateMaxSpendingValue(int val)
+    {
+        this.maxSpendingAmount  = val;
     }
 }

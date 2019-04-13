@@ -21,6 +21,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -58,7 +60,7 @@ public class ExpensesListFragment extends Fragment {
 
     private void getExpenses() {
 
-        Query myQuery = mDatabase.child("expenses").child(mUser.getUid());
+        Query myQuery = mDatabase.child("expenses").child(mUser.getUid()).orderByChild("currentDate");
         myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             List<Expense> myList = new ArrayList<>();
 
@@ -86,5 +88,16 @@ public class ExpensesListFragment extends Fragment {
         System.out.println("my list:" + myList);
         ExpenseAdapter adapter = new ExpenseAdapter(getActivity(), R.layout.listview_item, myList);
         listView.setAdapter(adapter);
+        sortList(myList);
+    }
+    private void sortList(List<Expense> list) {
+        Collections.sort(list, new Comparator<Expense>() {
+            public int compare(Expense ideaVal1, Expense ideaVal2) {
+                // avoiding NullPointerException in case name is null
+                Long val1 = ideaVal1.getCurrentDate();
+                Long val2 = ideaVal2.getCurrentDate();
+                return val2.compareTo(val1);
+            }
+        });
     }
 }

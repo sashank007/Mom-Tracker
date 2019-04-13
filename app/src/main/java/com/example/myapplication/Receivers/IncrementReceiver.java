@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
-import com.example.myapplication.StreakUpdaterService;
+import com.example.myapplication.Services.StreakUpdaterService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,11 +44,11 @@ public class IncrementReceiver extends BroadcastReceiver
         // Put here YOUR code.
         endTime  = System.currentTimeMillis();
         totalTime = endTime - startTime;
-//        context.startService(new Intent(context, UpdateHoursService.class));
+//      context.startService(new Intent(context, UpdateHoursService.class));
         System.out.println("on receive alarm");
-//        streakUpdater();
+        streakUpdater();
         Intent background = new Intent(context, StreakUpdaterService.class);
-        context.startService(background);
+        context.startForegroundService(background);
         wl.release();
     }
 

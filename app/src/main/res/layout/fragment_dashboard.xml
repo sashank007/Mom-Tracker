@@ -47,7 +47,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:src="@drawable/baseline_add_24"
-        app:backgroundTint="@color/colorLight"
+        android:tint="@color/white"
+        app:backgroundTint="@color/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.964"
@@ -63,14 +64,17 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="Get All Expenses"
         android:textColor="@color/colorSecondary"
         android:textColorLink="@color/colorSecondary"
         android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/fab"
-        app:layout_constraintHorizontal_bias="0.745"
+        app:layout_constraintHorizontal_bias="0.739"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_totalexpense" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_totalexpense"
+        app:layout_constraintVertical_bias="0.026" />
 
     <TextView
         android:id="@+id/tv_totalexpense"

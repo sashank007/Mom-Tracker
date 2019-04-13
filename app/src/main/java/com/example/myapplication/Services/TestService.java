@@ -1,15 +1,24 @@
-package com.example.myapplication;
+package com.example.myapplication.Services;
 
 
-import android.app.*;
-import android.content.*;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.os.*;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.example.myapplication.Data.Expense;
+import com.example.myapplication.Activities.MainActivity;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.R;
+import com.firebase.jobdispatcher.JobParameters;
+import com.firebase.jobdispatcher.JobService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,66 +28,50 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-public class StreakUpdaterService extends Service {
-
-    private boolean isRunning;
-    private Context context;
+public class TestService extends JobService
+{
     private DatabaseReference mDatabase;
     private FirebaseUser mUser;
     private FirebaseAuth firebaseAuth;
+    private static final String TAG = TestService.class.getSimpleName();
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-        this.context = this;
-        this.isRunning = false;
-
-
-    }
-
-    private Runnable myTask = new Runnable() {
-        public void run() {
-            // Do something here
-            stopSelf();
-        }
-    };
-
-    //    @Override
-    ////    public void onDestroy() {
-    ////        this.isRunning = false;
-    ////    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-//        if(!this.isRunning) {
-//            this.isRunning = true;
-//
-//        }
-        super.onStartCommand(intent, flags, startId);
-        Toast.makeText(this , "on create in streak updater" , Toast.LENGTH_LONG).show();
-        pushNotification("Wakeup called"  , "Wakeup");
-//        if(isMidnight())
-        streakUpdater();
-        return START_NOT_STICKY;
-    }
-
-    private void streakUpdater() {
+    public boolean onStartJob(JobParameters job)
+    {
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mUser = firebaseAuth.getCurrentUser();
+            Log.i(TAG, "onStartJob: my job service class is called.");
+    //        Toast.makeText(this, "Job service called" , Toast.LENGTH_LONG).show();
+        // enter the task you want to perform.
+//        Log.i("STREAK UPDATE SERVICE","called streak update");
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getPath());
+        if(isMidnight())
+            streakUpdater();
+        Log.i("STREAK UPDATE SERVICE",
+                "Free space is " +
+                        (statFs.getAvailableBlocksLong() *
+                                statFs.getBlockSizeLong() /
+                                1024) +
+                        " Kb"
+        );
+        return false;
+    }
+
+    @Override
+    public boolean onStopJob(JobParameters job)
+    {
+        return false;
+    }
+
+
+    private void streakUpdater() {
+
         Query myQuery = mDatabase.child("users").child(mUser.getUid());
         myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -102,7 +95,8 @@ public class StreakUpdaterService extends Service {
     {
         int newStreak = currStreak+1;
         mDatabase.child("users").child(mUser.getUid()).child("currentStreak").setValue(newStreak);
-        pushNotification("Updated your streak : " + newStreak , "Streak Update");
+        Toast.makeText(this, "Updated streak!!!!!!" , Toast.LENGTH_LONG).show();
+        pushNotification("Updated your streak : " + newStreak , "Mom sent you a message:");
     }
 
     private boolean isMidnight()
@@ -129,6 +123,9 @@ public class StreakUpdaterService extends Service {
             notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
+        Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                intent, 0);
 
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
@@ -141,10 +138,9 @@ public class StreakUpdaterService extends Service {
                 //     .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle(msgTitle)
                 .setContentText(msgText)
+                .setContentIntent(pendingIntent)
                 .setContentInfo("Info");
 
         notificationManager.notify(/*notification id*/1, notificationBuilder.build());
     }
-
-
 }

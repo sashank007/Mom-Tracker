@@ -9,4 +9,6 @@
     <color name="lightGrey">#d32f2f</color>
     <color name="greyLighter">#90a4ae</color>
     <color name="colorSecondary">#f57f17</color>
+    <color name="colorCalendarExpense">#7E57C2</color>
+    <color name="colorCalendarExceedsExpense">#EF5350</color>
 </resources>
