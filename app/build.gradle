@@ -35,7 +35,6 @@ dependencies {
     implementation 'com.roomorama:caldroid:3.0.1'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     def room_version = "2.1.0-alpha04"
-
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
 

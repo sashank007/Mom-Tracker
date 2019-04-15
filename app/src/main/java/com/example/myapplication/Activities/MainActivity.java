@@ -332,6 +332,9 @@ public class MainActivity extends AppCompatActivity {
                 // User chose the "Settings" item, show the app settings UI...
                 refreshView();
                 return true;
+            case R.id.action_logout:
+                firebaseAuth.signOut();
+                startActivity(new Intent(this,LoginActivity.class));
 
             default:
                 // If we got here, the user's action was not recognized.

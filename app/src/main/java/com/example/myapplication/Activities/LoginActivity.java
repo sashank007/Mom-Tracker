@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +17,9 @@ import android.widget.Toast;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.R;
+import com.example.myapplication.Receivers.ToastBroadcastReceiver;
 import com.firebase.ui.auth.AuthUI;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
@@ -25,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -56,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     public static int RC_SIGN_IN=1;
     private DatabaseReference mDatabase;
     AppDatabase db;
-    EditText et_email, et_phone , firstName , lastName  , et_spending;
+    EditText et_email, et_phone , firstName , lastName  , et_spending , et_password;
     String email ,first_name,last_name , maxSpending;
     String phone;
     SharedPreferences sharedPreferences;
@@ -80,25 +85,27 @@ public class LoginActivity extends AppCompatActivity {
 
 
         et_email = (EditText) findViewById(R.id.et_email);
-        et_phone = (EditText) findViewById(R.id.et_maxSpending);
-        firstName = (EditText)findViewById(R.id.et_firstName);
-        lastName = (EditText)findViewById(R.id.et_lastname);
-        et_spending = findViewById(R.id.et_maxSpending);
-        login = (Button) findViewById(R.id.bt_login);
+        et_password = findViewById(R.id.et_password);
+
+//        et_phone = (EditText) findViewById(R.id.et_maxSpending);
+//        firstName = (EditText)findViewById(R.id.et_firstName);
+//        lastName = (EditText)findViewById(R.id.et_lastname);
+//        et_spending = findViewById(R.id.et_maxSpending);
+        login = (Button) findViewById(R.id.btn_login);
         time_to_login = System.currentTimeMillis();
         sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
-        checkExistingUser();
+//        checkExistingUser();
 
         login.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 System.out.println("clicked login");
-                login();
+                loginUser(et_email.getText().toString(),et_password.getText().toString());
             }
         });
     }
@@ -133,33 +140,31 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    public void checkExistingUser() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        boolean existingUser = false;
-        if (user != null) {
-            // User is signed in
-            existingUser = true;
 
+    private void loginUser(String email , String password)
+    {
+        if(TextUtils.isEmpty(email)||TextUtils.isEmpty(password)) {
+
+            Toast.makeText(getApplicationContext(),"Please provide email and password",Toast.LENGTH_LONG).show();
         }
-        User u = db.userDao().findByEmail(email);
-
-//        if(sharedPreferences.contains(INTENT_PHONE) && sharedPreferences.contains(INTENT_EMAIL))
+        else
         {
-            System.out.println("has phone and email");
-            if (existingUser) {
-
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                this.finish();
-            } else {
-
-//                System.out.println("does not have settings:" + sharedPreferences.contains(INTENT_SETTINGS));
-//                Intent intent = new Intent(this, SettingsActivity.class);
-//                startActivity(intent);
-//                this.finish();
-            }
-
+            final String f_email = email, f_password = password;
+            firebaseAuth.signInWithEmailAndPassword(f_email, f_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Login Successful.", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Not a valid email id or password" , Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
+
     }
 
     public void login() {
