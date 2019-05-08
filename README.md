@@ -13,3 +13,8 @@ INSTRUCTIONS:
 7. copy the url retrieved into the MainActivity.class static url -> nograkUrl 
 8. rebuild the apk 
 9. you can now run it.. have fun!
+
+
+Here is the demo : 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/O7L3svto5Cw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
