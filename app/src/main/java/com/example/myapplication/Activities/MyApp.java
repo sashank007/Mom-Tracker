@@ -30,7 +30,7 @@ public class MyApp extends Application {
 //            SharedPreferences.Editor editor = prefs.edit();
 //            editor.putBoolean("firstTime", true);
 //            editor.commit();
-            Log.d("MYAPP","First time running job");
+//            Log.d("MYAPP","First time running job");
 //        }
 //        else
 //        {

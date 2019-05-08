@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
     String phone;
     SharedPreferences sharedPreferences;
     long time_to_login;
-    Button login;
+    Button login , btn_signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
 
-
+        btn_signup=findViewById(R.id.btn_signup);
         et_email = (EditText) findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
 
@@ -108,9 +108,25 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(et_email.getText().toString(),et_password.getText().toString());
             }
         });
+        btn_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),SignUpActivity.class));
+            }
+        });
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser == null) {
+            // No user is signed in
+        } else {
+            startActivity(new Intent(this,MainActivity.class));
+        }
+    }
     private void writeNewUser(String userId, String firstName, String lastName , int highestStreak , int currentStreak ,long timeLeft , int maxSpending , String email , String phone) {
 
         System.out.println("write new user: " );
@@ -243,24 +259,24 @@ public class LoginActivity extends AppCompatActivity {
                 String uniqueID = UUID.randomUUID().toString();
                 writeNewUser(uniqueID,first_name , last_name ,0 , 0 , 0 , Integer.parseInt(maxSpending), email , phone);
 
-                System.out.println("inside login info into db " + db.userDao().findByName(first_name,last_name));
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra(INTENT_EMAIL, email);
-                intent.putExtra(INTENT_PHONE, phone);
-
-                if (sharedPreferences.edit().putString(INTENT_EMAIL, email).commit() &&
-                        sharedPreferences.edit().putString(INTENT_PHONE, phone).commit() && sharedPreferences.edit().putString(INTENT_FIRST_TIME, "true").commit() ) {
-
-                    time_to_login = System.currentTimeMillis() - time_to_login;
-
-                    sharedPreferences.edit().putInt(getString(R.string.login), sharedPreferences.getInt(getString(R.string.login), 0) + 1).apply();
-                    HashSet<String> hashset = (HashSet<String>) sharedPreferences.getStringSet("LOGIN_TIME", new HashSet<String>());
-                    hashset.add("LOGIN_ATTEMPT_" + sharedPreferences.getInt(getString(R.string.login), 0) + "_" + phone + "_" + email + "_" + time_to_login);
-                    sharedPreferences.edit().putStringSet("LOGIN_TIME", hashset).apply();
-                    startActivity(intent);
-                    this.finish();
-
-                }
+//                System.out.println("inside login info into db " + db.userDao().findByName(first_name,last_name));
+//                Intent intent = new Intent(this, MainActivity.class);
+//                intent.putExtra(INTENT_EMAIL, email);
+//                intent.putExtra(INTENT_PHONE, phone);
+//
+//                if (sharedPreferences.edit().putString(INTENT_EMAIL, email).commit() &&
+//                        sharedPreferences.edit().putString(INTENT_PHONE, phone).commit() && sharedPreferences.edit().putString(INTENT_FIRST_TIME, "true").commit() ) {
+//
+//                    time_to_login = System.currentTimeMillis() - time_to_login;
+//
+//                    sharedPreferences.edit().putInt(getString(R.string.login), sharedPreferences.getInt(getString(R.string.login), 0) + 1).apply();
+//                    HashSet<String> hashset = (HashSet<String>) sharedPreferences.getStringSet("LOGIN_TIME", new HashSet<String>());
+//                    hashset.add("LOGIN_ATTEMPT_" + sharedPreferences.getInt(getString(R.string.login), 0) + "_" + phone + "_" + email + "_" + time_to_login);
+//                    sharedPreferences.edit().putStringSet("LOGIN_TIME", hashset).apply();
+//                    startActivity(intent);
+//                    this.finish();
+//
+//                }
 
 
             }

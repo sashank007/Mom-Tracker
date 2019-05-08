@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.Data.Expense;
+import com.example.myapplication.Fragments.ExpenseTrackerFragment;
 import com.example.myapplication.Receivers.Alarm;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.User;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     public static int CurrentUserMaxSpendingAmount = 0;
     private FirebaseAuth firebaseAuth;
+    private FirebaseJobDispatcher dispatcher;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -117,7 +119,15 @@ public class MainActivity extends AppCompatActivity {
         //setting action bar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        Intent i = getIntent();
+        Log.d("MAINACTIVITY","GETTING INTENT");
+        if(i.hasExtra("FragmentCall"))
+        {
 
+                    Log.d("MAINACTIVITY","inside hasExtra");
+            String amount = this.getIntent().getExtras().getString("amount");
+            callRequiredFragment(this.getIntent().getExtras().getString("FragmentCall"),amount);
+        }
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setBackgroundColor(getResources().getColor(R.color.white));
@@ -130,26 +140,42 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt("latestDollarAmount", 30);
         editor.apply();
 
+//        cancelJob(this,"UpdateStreakServiceJob");
         //job dispatcher
-        FirebaseJobDispatcher dispatcher =
+        dispatcher =
                 new FirebaseJobDispatcher(
                         new GooglePlayDriver(this)
                 );
-//        cancelJob(this,"UpdateStreakServiceJob");
-//        createJob(dispatcher);
-        dispatcher.mustSchedule(
-            dispatcher.newJobBuilder()
-                    .setService(TestService.class)
-                    .setTag("UpdateStreakServiceJob")
-                    .setLifetime(Lifetime.FOREVER)
-                    .setRecurring(true)
-                    .setTrigger(Trigger.executionWindow(1800, 1805))
-                    .build());
+
+        if(!sharedPreferences.getBoolean("firstTime", false)) {
+            dispatcher.cancelAll();
+              scheduleJob();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("firstTime", true);
+            editor.commit();
+        Log.d("MYAPP","First time running job");
+       }
+        else
+        {
+            Log.d("MYAPP","Job already started");
+}
 
         getMaxSpendingAmount();
 
     }
 
+
+    private void scheduleJob()
+    {
+        dispatcher.mustSchedule(
+                dispatcher.newJobBuilder()
+                        .setService(TestService.class)
+                        .setTag("UpdateStreakServiceJob")
+                        .setLifetime(Lifetime.FOREVER)
+                        .setRecurring(true)
+                        .setTrigger(Trigger.executionWindow(3600, 3605))
+                        .build());
+    }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -354,5 +380,30 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
 
     }
+
+    public void callRequiredFragment(String extra , String amount)
+    {
+        Log.d("MAINACTIVITY","sindie call required fragment");
+        if(extra.equals("ExpenseTrackerFragment"))
+        {
+            Fragment fragment = new ExpenseTrackerFragment();
+            Bundle args = new Bundle();
+
+            args.putString("amount",amount);
+            args.putString("FragmentCall","ExpenseTrackerFragment");
+            Log.d("STARTFRAGMENTACTIVITY","received amount from start fragment activity"  + amount);
+            args.putLong("DateSelected", System.currentTimeMillis());
+            fragment.setArguments(args);
+
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+
+        }
+        }
+    }
 }
+
 

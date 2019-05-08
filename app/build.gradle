@@ -23,7 +23,7 @@ dependencies {
     implementation 'androidx.core:core:1.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 	'com.google.android.material:material:1.0.0-rc01'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -37,7 +37,7 @@ dependencies {
     def room_version = "2.1.0-alpha04"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
-
+    implementation 'com.github.msayan:tutorial-view:v1.0.10'
     implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'

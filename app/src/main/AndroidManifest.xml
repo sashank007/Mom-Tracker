@@ -16,11 +16,16 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/mom_logo"
+        android:roundIcon="@mipmap/ic_momt"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name="com.example.myapplication.Activities.MainActivity"
+            android:label="@string/app_name">
+
+        </activity>
+        <activity
+            android:name="com.example.myapplication.Activities.SignUpActivity"
             android:label="@string/app_name">
 
         </activity>
@@ -39,6 +44,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.myapplication.Activities.HelperActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="com.example.myapplication.Activities.SettingsActivity"
             android:label="@string/app_name">
@@ -59,6 +74,9 @@
           <service
         android:name="com.example.myapplication.Services.NotificationIntentService"
         android:exported="false"/>
+        <service
+            android:name="com.example.myapplication.Services.AddExpenseService"
+            android:exported="false"/>
         <service android:name=".Services.TestService"
             android:exported="false">
             <intent-filter>

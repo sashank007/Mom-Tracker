@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.myapplication.Activities.MainActivity;
+import com.example.myapplication.Activities.StartFragmentActivity;
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.R;
 import com.example.myapplication.Receivers.DismissReceiver;
@@ -40,18 +41,20 @@ public class NotificationIntentService extends IntentService {
     FirebaseAuth firebaseAuth;
     DatabaseReference mDatabase;
     FirebaseUser mUser;
+    String amount="0";
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
 //        String amount = intent.getStringExtra("amount");
 //        Bundle bundle = intent.getExtras();
 //        String amount = bundle.getString("amount");
-        String amount="0";
+
         firebaseAuth  = FirebaseAuth.getInstance();
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         if(intent.hasExtra("amount"))
         amount = intent.getExtras().getString("amount");
+
 
         Log.d("NotificationIntentService","OnHandleIntent " + amount);
         pushNotification("Did you make a purchase of " + amount+"?" , "Mom sent you a message:",this);
@@ -87,12 +90,13 @@ public class NotificationIntentService extends IntentService {
         //dismiss the dialog
         Intent noIntent = new Intent(context, DismissReceiver.class);
         Intent yesIntent = new Intent(context, DismissReceiver.class);
+        yesIntent.putExtra("amount",amount.replace("$",""));
         noIntent.putExtra("gotoFragment" , "Close");
         yesIntent.putExtra("gotoFragment"  , "ExpenseTrackerFragment");
 
         //Create the PendingIntent
         PendingIntent btPendingIntentNo = PendingIntent.getBroadcast(context, 1234, noIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent btPendingIntentYes = PendingIntent.getBroadcast(context, 1234, yesIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent btPendingIntentYes = PendingIntent.getBroadcast(context, 4321, yesIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
         NotificationCompat.Action actionno = new NotificationCompat.Action.Builder(R.drawable.ic_thumb_down_grey600_48dp, "No", btPendingIntentNo).build();
         NotificationCompat.Action actionyes = new NotificationCompat.Action.Builder(R.drawable.ic_thumb_up_grey600_48dp, "Yes", btPendingIntentYes).build();

@@ -1,5 +1,6 @@
 package com.example.myapplication.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -81,7 +82,8 @@ public class ExpenseTrackerFragment extends Fragment {
         til_expenditureAmount = v.findViewById(R.id.til_expamount);
         til_expenditureType = v.findViewById(R.id.til_exptype);
         done = v.findViewById(R.id.btn_expendituredone);
-
+        if(getActivity().getIntent().hasExtra("amount"))
+            et_expenditureAmount.setText(getActivity().getIntent().getStringExtra("amount"));
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

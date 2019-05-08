@@ -34,11 +34,15 @@ public class DismissReceiver extends BroadcastReceiver {
         else
         {
             Log.d("Notification:" , "Opening expense tracker fragment");
+            String amount = intent.getExtras().getString("amount");
             Intent i = new Intent(context , StartFragmentActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("gotoFragment","ExpenseTrackerFragment");
+            i.putExtra("amount",amount);
 //            i.putExtra("gotoFragment","ExpenseTrackerFragment");
             context.startActivity(i);
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.cancel(1);
 
         }
 

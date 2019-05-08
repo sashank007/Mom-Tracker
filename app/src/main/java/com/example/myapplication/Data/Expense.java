@@ -12,7 +12,6 @@ public class Expense {
     public Expense(String type, int amount ,long currentDate , String subType)
     {
         this.type=type;
-
         this.amount=amount;
         this.currentDate = currentDate;
         this.subType = subType;
