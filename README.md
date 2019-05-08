@@ -5,7 +5,7 @@ The backend utilizes the Flask framework with a machine learning model pickeled 
 INSTRUCTIONS:
 
 1. make sure python 3.x is installed
-2. do a pip install flask(please refer to this link for flaks help : https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+2. do a pip install flask(please refer to this link for flask help : https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 3. do a pip install flask-sqlalchemy and other flask db required packages
 4. make sure FLASK_APP environment variable is set to app.py if not running
 5. do a flask run to make sure server is running
