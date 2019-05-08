@@ -15,6 +15,6 @@ INSTRUCTIONS:
 9. you can now run it.. have fun!
 
 
-Here is the demo : 
+Here is the demo video: 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/O7L3svto5Cw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Demo](https://img.youtube.com/vi/O7L3svto5Cw/0.jpg)](https://www.youtube.com/watch?v=O7L3svto5Cw)
