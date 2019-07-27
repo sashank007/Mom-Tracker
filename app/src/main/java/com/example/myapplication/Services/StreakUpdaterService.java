@@ -131,6 +131,7 @@ public class StreakUpdaterService extends IntentService {
     {
         Calendar rightNow = Calendar.getInstance();
         int currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
+//        int minutes
         if(currentHourIn24Format==0)
             return true;
         return false;

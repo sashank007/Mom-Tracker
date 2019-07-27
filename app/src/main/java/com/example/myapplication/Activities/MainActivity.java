@@ -146,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
                 new FirebaseJobDispatcher(
                         new GooglePlayDriver(this)
                 );
-
+        scheduleJob();
         if(!sharedPreferences.getBoolean("firstTime", false)) {
             dispatcher.cancelAll();
-              scheduleJob();
+            scheduleJob();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("firstTime", true);
             editor.commit();
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         .setTag("UpdateStreakServiceJob")
                         .setLifetime(Lifetime.FOREVER)
                         .setRecurring(true)
-                        .setTrigger(Trigger.executionWindow(3600, 3605))
+                        .setTrigger(Trigger.executionWindow(60, 65))
                         .build());
     }
 

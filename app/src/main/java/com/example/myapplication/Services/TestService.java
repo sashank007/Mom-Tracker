@@ -48,7 +48,7 @@ public class TestService extends JobService
         mUser = firebaseAuth.getCurrentUser();
             Log.i(TAG, "onStartJob: my job service class is called.");
         StatFs statFs = new StatFs(Environment.getRootDirectory().getPath());
-        pushNotification("Alarm triggered","Alarm!");
+//        pushNotification("Alarm triggered","Alarm!");
         if(checkUpdateExpenses())
             pushNotification("Did you fill in your expenses for the day?" , "Mom sent you a message:");
         if(isMidnight())
@@ -116,9 +116,9 @@ public class TestService extends JobService
     {
         Calendar rightNow = Calendar.getInstance();
         int currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
-        if(currentHourIn24Format==0)
-            return true;
-        return false;
+        int currentMinute = rightNow.get(Calendar.MINUTE);
+        Log.d(TAG,"CURRENT MINUTE:" + currentMinute+currentHourIn24Format);
+        return (currentHourIn24Format==0&&currentMinute==1);
     }
     public void pushNotification(String msgText , String msgTitle )
     {
