@@ -82,13 +82,13 @@ public class ExpensesListFragment extends Fragment {
     }
 
 
-    private void updateExpensesList(List<Expense> myList)
-    {
+    private void updateExpensesList(List<Expense> myList) {
         System.out.println("my list:" + myList);
         ExpenseAdapter adapter = new ExpenseAdapter(getActivity(), R.layout.listview_item, myList);
         listView.setAdapter(adapter);
         sortList(myList);
     }
+
     private void sortList(List<Expense> list) {
         Collections.sort(list, new Comparator<Expense>() {
             public int compare(Expense ideaVal1, Expense ideaVal2) {

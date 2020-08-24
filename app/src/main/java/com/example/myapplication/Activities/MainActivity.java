@@ -35,6 +35,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.Receivers.NotificationsReceiver;
 import com.example.myapplication.Services.BackgroundService;
 import com.example.myapplication.Services.NotificationIntentService;
+import com.example.myapplication.Services.NotificationListeningService;
 import com.example.myapplication.Services.StreakUpdaterService;
 import com.example.myapplication.Services.TestService;
 import com.firebase.jobdispatcher.Constraint;
@@ -175,13 +176,13 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MOM_KEEPS_TRACK_PACKAGE_NAME);
 
-        registerReceiver(notificationsReceiver , intentFilter);
+//        registerReceiver(notificationsReceiver , intentFilter);
 
         startBackgroundService();
 }
 
 private void startBackgroundService(){
-    Intent i = new Intent(this, NotificationListenerService.class);
+    Intent i = new Intent(this, NotificationListeningService.class);
     startService(i);
 }
 

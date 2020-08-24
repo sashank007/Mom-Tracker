@@ -40,12 +40,16 @@ public class User {
 
     @ColumnInfo(name="timeLeft")
     public long timeLeft;
+
     @ColumnInfo(name="maxSpending")
     public int maxSpending;
+
     @ColumnInfo(name="phoneNumber")
     public String phoneNumber;
+
     @ColumnInfo(name="email")
     public String email;
+
     @ColumnInfo(name="profilePic")
     public String profilePic;
 

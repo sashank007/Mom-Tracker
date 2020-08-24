@@ -14,9 +14,10 @@
     <string name="service_label">NotificationListenerService</string>
     <string name="package_name"></string>
     <string-array name="exp_types_array">
-    <item>Food</item>
+        <item>Food</item>
         <item>Supplies</item>
         <item>Bills</item>
         <item>Fun</item>
+        <item>Shopping</item>
     </string-array>
 </resources>

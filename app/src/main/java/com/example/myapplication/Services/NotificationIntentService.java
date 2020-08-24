@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import androidx.core.app.NotificationCompat;
@@ -37,13 +38,9 @@ public class NotificationIntentService extends IntentService {
     DatabaseReference mDatabase;
     FirebaseUser mUser;
     String amount="0";
+
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-//        String amount = intent.getStringExtra("amount");
-//        Bundle bundle = intent.getExtras();
-//        String amount = bundle.getString("amount");
-
         firebaseAuth  = FirebaseAuth.getInstance();
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -52,17 +49,14 @@ public class NotificationIntentService extends IntentService {
             amount = intent.getExtras().getString("amount");
 
             Log.d("NotificationIntentService", "OnHandleIntent " + amount);
-            pushNotification("Did you make a purchase of " + amount + "?", "Mom sent you a message:", this);
+            pushNotification(String.format(Locale.US, "Did you spend $%s without telling me?!" , amount), "Mom sent you a message:", this);
         }
     }
     private void updateExpenses(Expense exp)
     {
         String uniqueID = UUID.randomUUID().toString();
         mDatabase.child("expenses").child(mUser.getUid()).child(uniqueID).setValue(exp);
-
-
     }
-
 
     public void pushNotification(String msgText , String msgTitle , Context context )
     {

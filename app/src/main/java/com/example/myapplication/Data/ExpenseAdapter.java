@@ -66,6 +66,9 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
                 iconMapper.put("bills",R.drawable.baseline_mood_bad_24);
                 iconMapper.put("supplies",R.drawable.baseline_shopping_cart_24);
                 iconMapper.put("fun" , R.drawable.baseline_whatshot_24);
+                iconMapper.put("shopping" , R.drawable.ic_shopping_24dp);
+
+
                 vi = inflater.inflate(R.layout.listview_item, null);
                 holder = new ViewHolder();
 
@@ -80,7 +83,7 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
 
             System.out.println("amount in adapter: " + lExpense.get(position).amount);
 
-            holder.display_amount.setText( "$"+Integer.toString(lExpense.get(position).amount));
+            holder.display_amount.setText( "$"+Float.toString(lExpense.get(position).amount));
             holder.display_type.setText(lExpense.get(position).type);
             String date = getDate(lExpense.get(position).currentDate);
             holder.display_date.setText(date);

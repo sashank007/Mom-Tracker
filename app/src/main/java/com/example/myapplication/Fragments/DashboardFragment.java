@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -130,7 +131,7 @@ public class DashboardFragment extends Fragment {
         // [START basic_query_value_listener]
         // My top posts by number of stars
         myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                  int exp=0;
+                                  float exp=0;
                                   long chosenDate=0;
                                   @Override
                                   public void onDataChange(DataSnapshot dataSnapshot) {
@@ -221,9 +222,8 @@ public class DashboardFragment extends Fragment {
         System.out.println("current year: " + year);
         return year;
     }
-    private void updateUIExpense(int exp)
-    {
-        totalExpense.setText(" $" + Integer.toString(exp));
+    private void updateUIExpense(float exp) {
+        totalExpense.setText(String.format(Locale.US,"$%.2f", exp));
     }
 
     private void calendarListener()

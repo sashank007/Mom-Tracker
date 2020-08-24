@@ -23,9 +23,7 @@ public class NotificationsReceiver extends BroadcastReceiver {
         Intent i = new Intent(context,NotificationIntentService.class );
         i.putExtra("amount","30");
         context.startService(i);
-//      Start the service, keeping the device awake while it is launching.
-//      startWakefulService(context, (intent.setComponent(comp)));
-//      setResultCode(Activity.RESULT_OK);
+
     }
 
 }
