@@ -10,12 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.myapplication.Activities.MainActivity;
-import com.example.myapplication.Activities.StartFragmentActivity;
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.R;
 import com.example.myapplication.Receivers.DismissReceiver;
@@ -26,9 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.UUID;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.room.Database;
 
 public class NotificationIntentService extends IntentService {
 
@@ -52,13 +47,13 @@ public class NotificationIntentService extends IntentService {
         firebaseAuth  = FirebaseAuth.getInstance();
         mUser  = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        if(intent.hasExtra("amount"))
-        amount = intent.getExtras().getString("amount");
 
+        if(intent.hasExtra("amount")) {
+            amount = intent.getExtras().getString("amount");
 
-        Log.d("NotificationIntentService","OnHandleIntent " + amount);
-        pushNotification("Did you make a purchase of " + amount+"?" , "Mom sent you a message:",this);
-
+            Log.d("NotificationIntentService", "OnHandleIntent " + amount);
+            pushNotification("Did you make a purchase of " + amount + "?", "Mom sent you a message:", this);
+        }
     }
     private void updateExpenses(Expense exp)
     {

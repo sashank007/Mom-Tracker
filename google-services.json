@@ -15,25 +15,60 @@
       },
       "oauth_client": [
         {
+          "client_id": "601108177332-gltodm9q413t0itu4m6c3j1dva984vbi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "787748f162111f28c9a891eebd204433a846f915"
+          }
+        },
+        {
           "client_id": "601108177332-rfn8b0eqgdqpgiimcs5ac0t61pel82gq.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDFaqFKq2KXm13kyxfBqytwM2XuBXrVhXo"
+          "current_key": "AIzaSyBOsuNKj64bpRjkDXOLNnkxoFyi0IXIAmw"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601108177332-rfn8b0eqgdqpgiimcs5ac0t61pel82gq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601108177332:android:675b4880c1a015c5b992e1",
+        "android_client_info": {
+          "package_name": "com.sas.momkeepstrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "601108177332-rfn8b0eqgdqpgiimcs5ac0t61pel82gq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOsuNKj64bpRjkDXOLNnkxoFyi0IXIAmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601108177332-rfn8b0eqgdqpgiimcs5ac0t61pel82gq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

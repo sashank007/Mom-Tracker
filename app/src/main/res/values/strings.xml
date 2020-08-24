@@ -7,6 +7,12 @@
     <string name="hellya">Hell ya!</string>
     <string name="nope">Nope!</string>
     <string name="err_msg_amount">You gotta fill in an amount...</string>
+    <string name="notification_listener_service">Notification Listener Service</string>
+    <string name="notification_listener_service_explanation">Needed for listening to push notifications to track expenses</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="service_label">NotificationListenerService</string>
+    <string name="package_name"></string>
     <string-array name="exp_types_array">
     <item>Food</item>
         <item>Supplies</item>

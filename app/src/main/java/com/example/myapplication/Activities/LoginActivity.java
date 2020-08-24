@@ -17,9 +17,7 @@ import android.widget.Toast;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.R;
-import com.example.myapplication.Receivers.ToastBroadcastReceiver;
 import com.firebase.ui.auth.AuthUI;
-import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
@@ -29,10 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -185,30 +180,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login() {
 
-//
-//        if( ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.RECEIVE_SMS)
-//                != PackageManager.PERMISSION_GRANTED ) {
-//
-//            // Permission is not granted
-//            // Should we show an explanation?
-//            Toast.makeText(this,"Without access to SMS we cannot let you login." , Toast.LENGTH_LONG).show();
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    Manifest.permission.RECEIVE_SMS)) {
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//            } else {
-//                // No explanation needed; request the permission
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.READ_SMS},
-//                        101);
-//
-//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                // app-defined int constant. The callback method gets the
-//                // result of the request.
-//            }
-//        }
+
 
 
         if (ContextCompat.checkSelfPermission(this,
@@ -258,25 +230,6 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println("last name :" + last_name);
                 String uniqueID = UUID.randomUUID().toString();
                 writeNewUser(uniqueID,first_name , last_name ,0 , 0 , 0 , Integer.parseInt(maxSpending), email , phone);
-
-//                System.out.println("inside login info into db " + db.userDao().findByName(first_name,last_name));
-//                Intent intent = new Intent(this, MainActivity.class);
-//                intent.putExtra(INTENT_EMAIL, email);
-//                intent.putExtra(INTENT_PHONE, phone);
-//
-//                if (sharedPreferences.edit().putString(INTENT_EMAIL, email).commit() &&
-//                        sharedPreferences.edit().putString(INTENT_PHONE, phone).commit() && sharedPreferences.edit().putString(INTENT_FIRST_TIME, "true").commit() ) {
-//
-//                    time_to_login = System.currentTimeMillis() - time_to_login;
-//
-//                    sharedPreferences.edit().putInt(getString(R.string.login), sharedPreferences.getInt(getString(R.string.login), 0) + 1).apply();
-//                    HashSet<String> hashset = (HashSet<String>) sharedPreferences.getStringSet("LOGIN_TIME", new HashSet<String>());
-//                    hashset.add("LOGIN_ATTEMPT_" + sharedPreferences.getInt(getString(R.string.login), 0) + "_" + phone + "_" + email + "_" + time_to_login);
-//                    sharedPreferences.edit().putStringSet("LOGIN_TIME", hashset).apply();
-//                    startActivity(intent);
-//                    this.finish();
-//
-//                }
 
 
             }

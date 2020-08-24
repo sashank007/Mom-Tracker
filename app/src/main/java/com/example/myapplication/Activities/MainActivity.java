@@ -1,12 +1,14 @@
 package com.example.myapplication.Activities;
 
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -15,28 +17,25 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.provider.Settings;
+import android.service.notification.NotificationListenerService;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Fragments.ExpenseTrackerFragment;
-import com.example.myapplication.Receivers.Alarm;
-import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.Fragments.DashboardFragment;
 import com.example.myapplication.Fragments.HomeFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
 import com.example.myapplication.Receivers.DismissReceiver;
-import com.example.myapplication.Receivers.IncrementReceiver;
 import com.example.myapplication.R;
 import com.example.myapplication.Receivers.NotificationsReceiver;
-import com.example.myapplication.Receivers.ResponseBroadcastReceiver;
-import com.example.myapplication.Receivers.SmsListener;
-import com.example.myapplication.Receivers.SmsReceiver;
-import com.example.myapplication.Receivers.ToastBroadcastReceiver;
+import com.example.myapplication.Services.BackgroundService;
+import com.example.myapplication.Services.NotificationIntentService;
+import com.example.myapplication.Services.StreakUpdaterService;
 import com.example.myapplication.Services.TestService;
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -55,21 +54,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.SyncFailedException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import static com.firebase.ui.auth.ui.email.TroubleSigningInFragment.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseJobDispatcher dispatcher;
 
+    private AlertDialog enableNotificationListenerAlertDialog;
+    private NotificationsReceiver notificationsReceiver;
+
+    private static final String  MOM_KEEPS_TRACK_PACKAGE_NAME = "com.example.myapplication";
+    private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
+    private static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -93,13 +93,13 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    loadFragment(new HomeFragment());
+                    loadFragment(new ProfileFragment());
                     return true;
                 case R.id.navigation_dashboard:
                     loadFragment(new DashboardFragment());
                     return true;
                 case R.id.navigation_profile:
-                    loadFragment(new ProfileFragment());
+                    loadFragment(new HomeFragment());
                     return true;
 
             }
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //@TODO:remove
         setContentView(R.layout.activity_main);
-        loadFragment(new HomeFragment());
+        loadFragment(new ProfileFragment());
         firebaseAuth = FirebaseAuth.getInstance();
         mUser = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -162,8 +162,49 @@ public class MainActivity extends AppCompatActivity {
 
         getMaxSpendingAmount();
 
-    }
 
+        //service for listening to notifications
+        if(!isNotificationServiceEnabled()){
+            enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
+            enableNotificationListenerAlertDialog.show();
+        }
+
+
+        // Finally we register a receiver to tell the MainActivity when a notification has been received
+        NotificationBroadcastReceiver notificationsReceiver = new NotificationBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MOM_KEEPS_TRACK_PACKAGE_NAME);
+
+        registerReceiver(notificationsReceiver , intentFilter);
+
+        startBackgroundService();
+}
+
+private void startBackgroundService(){
+    Intent i = new Intent(this, NotificationListenerService.class);
+    startService(i);
+}
+
+    /**
+
+     * We use this Broadcast Receiver to notify the Main Activity when
+     * a new notification has arrived, so it can properly change the
+     * notification image
+     * */
+    public class NotificationBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String title = intent.getStringExtra("Title");
+            String text = intent.getStringExtra("Text");
+            String dollarAmount = intent.getStringExtra("DollarAmount");
+
+            Log.d("NOTIFICATION_RECEIVER" , "GOT TITLE : " + dollarAmount + " " + text);
+            Intent i = new Intent(context, NotificationIntentService.class );
+            i.putExtra("amount", dollarAmount);
+            context.startService(i);
+        }
+    }
 
     private void scheduleJob()
     {
@@ -404,6 +445,58 @@ public class MainActivity extends AppCompatActivity {
         }
         }
     }
+
+    /**
+     * Is Notification Service Enabled.
+     * Verifies if the notification listener service is enabled.
+     * Got it from: https://github.com/kpbird/NotificationListenerService-Example/blob/master/NLSExample/src/main/java/com/kpbird/nlsexample/NLService.java
+     * @return True if enabled, false otherwise.
+     */
+    private boolean isNotificationServiceEnabled(){
+        String pkgName = getPackageName();
+        final String flat = Settings.Secure.getString(getContentResolver(),
+                ENABLED_NOTIFICATION_LISTENERS);
+        if (!TextUtils.isEmpty(flat)) {
+            final String[] names = flat.split(":");
+            for (int i = 0; i < names.length; i++) {
+                final ComponentName cn = ComponentName.unflattenFromString(names[i]);
+                if (cn != null) {
+                    if (TextUtils.equals(pkgName, cn.getPackageName())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * Build Notification Listener Alert Dialog.
+     * Builds the alert dialog that pops up if the user has not turned
+     * the Notification Listener Service on yet.
+     * @return An alert dialog which leads to the notification enabling screen
+     */
+    private AlertDialog buildNotificationServiceAlertDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.notification_listener_service);
+        alertDialogBuilder.setMessage(R.string.notification_listener_service_explanation);
+        alertDialogBuilder.setPositiveButton(R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
+                    }
+                });
+        alertDialogBuilder.setNegativeButton(R.string.no,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // If you choose to not enable the notification listener
+                        // the app. will not work as expected
+                    }
+                });
+        return(alertDialogBuilder.create());
+    }
+
 }
 
 

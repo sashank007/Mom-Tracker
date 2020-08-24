@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapplication.Activities.MainActivity;
-import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.R;
 import com.example.myapplication.Receivers.ResponseBroadcastReceiver;
@@ -22,11 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

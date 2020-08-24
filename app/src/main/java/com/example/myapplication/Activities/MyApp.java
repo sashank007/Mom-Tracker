@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.example.myapplication.Receivers.Alarm;
 import com.example.myapplication.Receivers.IncrementReceiver;

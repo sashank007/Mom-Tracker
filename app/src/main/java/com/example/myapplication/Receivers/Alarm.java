@@ -9,11 +9,6 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.myapplication.Services.BackgroundService;
-import com.example.myapplication.Services.NotificationIntentService;
-import com.example.myapplication.Services.StreakUpdaterService;
-import com.example.myapplication.Services.TestService;
-
 import java.util.Calendar;
 
 public class Alarm extends BroadcastReceiver

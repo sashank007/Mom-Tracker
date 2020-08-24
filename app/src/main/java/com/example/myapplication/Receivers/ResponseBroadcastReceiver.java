@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 public class ResponseBroadcastReceiver extends BroadcastReceiver {
     @Override

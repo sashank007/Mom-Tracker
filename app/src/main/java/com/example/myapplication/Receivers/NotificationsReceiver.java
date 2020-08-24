@@ -1,17 +1,13 @@
 package com.example.myapplication.Receivers;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapplication.Services.NotificationIntentService;
-
-import androidx.legacy.content.WakefulBroadcastReceiver;
 
 public class NotificationsReceiver extends BroadcastReceiver {
 

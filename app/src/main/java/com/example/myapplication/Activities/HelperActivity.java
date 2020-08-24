@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import com.example.myapplication.R;
 import com.hololo.tutorial.library.PermissionStep;
 import com.hololo.tutorial.library.Step;
 import com.hololo.tutorial.library.TutorialActivity;
-
-import androidx.fragment.app.Fragment;
 
 public class HelperActivity extends TutorialActivity {
 

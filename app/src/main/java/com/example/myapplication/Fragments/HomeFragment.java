@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.myapplication.Data.AppDatabase;
-import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,10 +29,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

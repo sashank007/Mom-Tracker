@@ -1,6 +1,5 @@
 package com.example.myapplication.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.example.myapplication.Data.AppDatabase;
 import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Data.User;
-import com.example.myapplication.Activities.MainActivity;
 import com.example.myapplication.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +35,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.room.Room;
 
 import static com.firebase.ui.auth.ui.email.TroubleSigningInFragment.TAG;
 

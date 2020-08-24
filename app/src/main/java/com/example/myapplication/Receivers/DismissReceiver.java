@@ -6,14 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.myapplication.Activities.StartFragmentActivity;
-import com.example.myapplication.R;
-import com.example.myapplication.Services.StartFragmentService;
-
-import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.Fragment;
 
 public class DismissReceiver extends BroadcastReceiver {
 

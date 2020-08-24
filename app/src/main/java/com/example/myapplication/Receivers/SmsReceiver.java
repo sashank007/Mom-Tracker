@@ -9,7 +9,6 @@ import android.os.PowerManager;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
-import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Services.NotificationIntentService;
 
 public class SmsReceiver extends BroadcastReceiver {
@@ -32,8 +31,7 @@ public class SmsReceiver extends BroadcastReceiver {
             String body = smsMessage.getMessageBody().toLowerCase();
             //Check the sender to filter messages which we require to read
             System.out.println("smsMessage:"  + smsMessage.getMessageBody());
-            if (body.contains("debit") || body.contains("debited"))
-            {
+            if (body.contains("debit") || body.contains("debited")) {
                 String[] words = body.split(" ");
                 for(int j = 0 ;j <words.length;j++)
                 {
@@ -44,8 +42,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 }
                 String messageBody = smsMessage.getMessageBody().toLowerCase();
                 Toast.makeText(context , messageBody, Toast.LENGTH_LONG).show();
-                Intent intent1 = new Intent(context, NotificationIntentService.class );
-                intent1.putExtra("amount",dollarAmount);
+                Intent intent1 = new Intent(context, NotificationIntentService.class);
+                intent1.putExtra("amount", dollarAmount);
 
                 context.startService(intent1);
             }
