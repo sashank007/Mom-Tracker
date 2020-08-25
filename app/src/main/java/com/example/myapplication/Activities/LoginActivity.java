@@ -53,15 +53,15 @@ public class LoginActivity extends AppCompatActivity {
     public static String INTENT_SERVER_ADDRESS = "INTENT_SERVER_ADDRESS";
     public static String INTENT_PRACTICE = "INTENT_PRACTICE";
     private FirebaseAuth firebaseAuth;
-    public static int RC_SIGN_IN=1;
+    public static int RC_SIGN_IN = 1;
     private DatabaseReference mDatabase;
     AppDatabase db;
-    EditText et_email, et_phone , firstName , lastName  , et_spending , et_password;
-    String email ,first_name,last_name , maxSpending;
+    EditText et_email, et_phone, firstName, lastName, et_spending, et_password;
+    String email, first_name, last_name, maxSpending;
     String phone;
     SharedPreferences sharedPreferences;
     long time_to_login;
-    Button login , btn_signup;
+    Button login, btn_signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +70,15 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build());
-        firebaseAuth  = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
-                .setAndroidPackageName(getPackageName(),true,null)
-        .setHandleCodeInApp(true) // This must be set to true
+                .setAndroidPackageName(getPackageName(), true, null)
+                .setHandleCodeInApp(true) // This must be set to true
                 .setUrl("https://google.com") // This URL needs to be whitelisted
                 .build();
 
 
-        btn_signup=findViewById(R.id.btn_signup);
+        btn_signup = findViewById(R.id.btn_signup);
         et_email = (EditText) findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
 
@@ -100,13 +100,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 System.out.println("clicked login");
-                loginUser(et_email.getText().toString(),et_password.getText().toString());
+                loginUser(et_email.getText().toString(), et_password.getText().toString());
             }
         });
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),SignUpActivity.class));
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
             }
         });
     }
@@ -119,47 +119,43 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser == null) {
             // No user is signed in
         } else {
-            startActivity(new Intent(this,MainActivity.class));
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
-    private void writeNewUser(String userId, String firstName, String lastName , int highestStreak , int currentStreak ,long timeLeft , int maxSpending , String email , String phone) {
 
-        System.out.println("write new user: " );
-        final String first_name  = firstName , last_name = lastName ,_email = email  , _phone = phone;
-        final int highest_streak = highestStreak , current_streak = currentStreak , max_spending = maxSpending;
-        firebaseAuth.createUserWithEmailAndPassword(email,"Sashank@007").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    private void writeNewUser(String userId, String firstName, String lastName, int highestStreak, int currentStreak, long timeLeft, int maxSpending, String email, String phone) {
+
+        System.out.println("write new user: ");
+        final String first_name = firstName, last_name = lastName, _email = email, _phone = phone;
+        final int highest_streak = highestStreak, current_streak = currentStreak, max_spending = maxSpending;
+        firebaseAuth.createUserWithEmailAndPassword(email, "Sashank@007").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     FirebaseUser user = firebaseAuth.getCurrentUser(); //You Firebase user
                     // user registered, start profile activity
-                    Toast.makeText(LoginActivity.this,"Account Created",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Account Created", Toast.LENGTH_LONG).show();
 
-                    User newUser = new User(first_name , last_name , 0,0,0,max_spending,_email,_phone , "");
+                    User newUser = new User(first_name, last_name, 0, 0, 0, max_spending, _email, _phone, "");
                     mDatabase.child("users").child(user.getUid()).setValue(newUser);
 
                     finish();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                }
-                else{
-                    Toast.makeText(LoginActivity.this,"Could not create account. Please try again",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Could not create account. Please try again", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
-
     }
 
-    private void loginUser(String email , String password)
-    {
-        if(TextUtils.isEmpty(email)||TextUtils.isEmpty(password)) {
+    private void loginUser(String email, String password) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
 
-            Toast.makeText(getApplicationContext(),"Please provide email and password",Toast.LENGTH_LONG).show();
-        }
-        else
-        {
+            Toast.makeText(getApplicationContext(), "Please provide email and password", Toast.LENGTH_LONG).show();
+        } else {
             final String f_email = email, f_password = password;
             firebaseAuth.signInWithEmailAndPassword(f_email, f_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -167,10 +163,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "Login Successful.", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "Not a valid email id or password" , Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Not a valid email id or password", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -179,17 +173,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
-
-
-
-
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -229,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
                 System.out.println("first name :" + first_name);
                 System.out.println("last name :" + last_name);
                 String uniqueID = UUID.randomUUID().toString();
-                writeNewUser(uniqueID,first_name , last_name ,0 , 0 , 0 , Integer.parseInt(maxSpending), email , phone);
+                writeNewUser(uniqueID, first_name, last_name, 0, 0, 0, Integer.parseInt(maxSpending), email, phone);
 
 
             }

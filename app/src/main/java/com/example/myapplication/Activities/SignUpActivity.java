@@ -63,14 +63,12 @@ public class SignUpActivity extends Activity {
 
         setContentView(R.layout.activity_signup);
         initializeVars();
-
     }
-
 
     private void initializeVars() {
         sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         time_to_login = System.currentTimeMillis();
-        et_email = (EditText) findViewById(R.id.et_email);
+        et_email = findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
         et_phone = findViewById(R.id.et_phoneNumber);
         et_firstName = findViewById(R.id.et_firstName);
@@ -89,7 +87,6 @@ public class SignUpActivity extends Activity {
             @Override
             public void onClick(View view) {
                 signup();
-
             }
         });
     }
@@ -121,8 +118,6 @@ public class SignUpActivity extends Activity {
                 }
             }
         });
-
-
     }
 
     private void loginUser(String email, String password) {
@@ -143,7 +138,6 @@ public class SignUpActivity extends Activity {
                 }
             });
         }
-
     }
 
     public void signup() {
@@ -172,15 +166,12 @@ public class SignUpActivity extends Activity {
             }
         }
 
-
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
             // Should we show an explanation?
-
-
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 // Show an explanation to the user *asynchronously* -- don't block
@@ -191,12 +182,7 @@ public class SignUpActivity extends Activity {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         100);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
-
         } else {
             if (et_email.getText().toString().isEmpty() || et_phone.getText().toString().isEmpty()) {
                 AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -219,26 +205,6 @@ public class SignUpActivity extends Activity {
                 passWord = et_password.getText().toString().trim();
                 String uniqueID = UUID.randomUUID().toString();
                 writeNewUser(uniqueID, passWord, first_name, last_name, 0, 0, 0, Integer.parseInt(maxSpending), email, phone);
-//
-//                Intent intent = new Intent(this, MainActivity.class);
-//                intent.putExtra(INTENT_EMAIL, email);
-//                intent.putExtra(INTENT_PHONE, phone);
-//
-//                if (sharedPreferences.edit().putString(INTENT_EMAIL, email).commit() &&
-//                        sharedPreferences.edit().putString(INTENT_PHONE, phone).commit() && sharedPreferences.edit().putString(INTENT_FIRST_TIME, "true").commit() ) {
-//
-//                    time_to_login = System.currentTimeMillis() - time_to_login;
-//
-//                    sharedPreferences.edit().putInt(getString(R.string.login), sharedPreferences.getInt(getString(R.string.login), 0) + 1).apply();
-//                    HashSet<String> hashset = (HashSet<String>) sharedPreferences.getStringSet("LOGIN_TIME", new HashSet<String>());
-//                    hashset.add("LOGIN_ATTEMPT_" + sharedPreferences.getInt(getString(R.string.login), 0) + "_" + phone + "_" + email + "_" + time_to_login);
-//                    sharedPreferences.edit().putStringSet("LOGIN_TIME", hashset).apply();
-//                    startActivity(intent);
-//                    this.finish();
-//
-//                }
-
-
             }
         }
     }

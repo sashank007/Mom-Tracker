@@ -1,49 +1,34 @@
 package com.example.myapplication.Activities;
 
 import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import android.provider.Settings;
-import android.service.notification.NotificationListenerService;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.myapplication.Data.Expense;
 import com.example.myapplication.Fragments.ExpenseTrackerFragment;
 import com.example.myapplication.Data.User;
 import com.example.myapplication.Fragments.DashboardFragment;
 import com.example.myapplication.Fragments.HomeFragment;
 import com.example.myapplication.Fragments.ProfileFragment;
-import com.example.myapplication.Receivers.DismissReceiver;
 import com.example.myapplication.R;
-import com.example.myapplication.Receivers.NotificationsReceiver;
-import com.example.myapplication.Services.BackgroundService;
 import com.example.myapplication.Services.NotificationIntentService;
 import com.example.myapplication.Services.NotificationListeningService;
-import com.example.myapplication.Services.StreakUpdaterService;
 import com.example.myapplication.Services.TestService;
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
-import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,13 +40,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.UUID;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -81,9 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseJobDispatcher dispatcher;
 
     private AlertDialog enableNotificationListenerAlertDialog;
-    private NotificationsReceiver notificationsReceiver;
 
-    private static final String  MOM_KEEPS_TRACK_PACKAGE_NAME = "com.example.myapplication";
+    private static final String MOM_KEEPS_TRACK_PACKAGE_NAME = "com.example.myapplication";
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     private static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
 
@@ -102,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     loadFragment(new HomeFragment());
                     return true;
-
             }
             return false;
         }
@@ -111,23 +91,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //@TODO:remove
+
         setContentView(R.layout.activity_main);
+
         loadFragment(new ProfileFragment());
+
         firebaseAuth = FirebaseAuth.getInstance();
         mUser = firebaseAuth.getCurrentUser();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         //setting action bar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        Intent i = getIntent();
-        Log.d("MAINACTIVITY","GETTING INTENT");
-        if(i.hasExtra("FragmentCall"))
-        {
 
-                    Log.d("MAINACTIVITY","inside hasExtra");
+        Intent i = getIntent();
+        if (i.hasExtra("FragmentCall")) {
+
             String amount = this.getIntent().getExtras().getString("amount");
-            callRequiredFragment(this.getIntent().getExtras().getString("FragmentCall"),amount);
+            callRequiredFragment(this.getIntent().getExtras().getString("FragmentCall"), amount);
         }
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
@@ -135,63 +116,49 @@ public class MainActivity extends AppCompatActivity {
 
         myStateList = getColorStateList();
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//        navigation.setItemTextColor(myStateList);
         sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.putInt("latestDollarAmount", 30);
         editor.apply();
 
-//        cancelJob(this,"UpdateStreakServiceJob");
         //job dispatcher
         dispatcher =
                 new FirebaseJobDispatcher(
                         new GooglePlayDriver(this)
                 );
-        scheduleJob();
-        if(!sharedPreferences.getBoolean("firstTime", false)) {
+//        scheduleJob();
+        if (!sharedPreferences.getBoolean("firstTime", false)) {
             dispatcher.cancelAll();
-            scheduleJob();
+//            scheduleJob();
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("firstTime", true);
-            editor.commit();
-        Log.d("MYAPP","First time running job");
-       }
-        else
-        {
-            Log.d("MYAPP","Job already started");
-}
+            editor.apply();
+            Log.d("MYAPP", "First time running job");
+        } else {
+            Log.d("MYAPP", "Job already started");
+        }
 
         getMaxSpendingAmount();
 
-
         //service for listening to notifications
-        if(!isNotificationServiceEnabled()){
+        if (!isNotificationServiceEnabled()) {
             enableNotificationListenerAlertDialog = buildNotificationServiceAlertDialog();
             enableNotificationListenerAlertDialog.show();
         }
 
-
-        // Finally we register a receiver to tell the MainActivity when a notification has been received
-        NotificationBroadcastReceiver notificationsReceiver = new NotificationBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MOM_KEEPS_TRACK_PACKAGE_NAME);
-
-//        registerReceiver(notificationsReceiver , intentFilter);
-
         startBackgroundService();
-}
+    }
 
-private void startBackgroundService(){
-    Intent i = new Intent(this, NotificationListeningService.class);
-    startService(i);
-}
+    private void startBackgroundService() {
+        Intent i = new Intent(this, NotificationListeningService.class);
+        startService(i);
+    }
 
     /**
-
      * We use this Broadcast Receiver to notify the Main Activity when
      * a new notification has arrived, so it can properly change the
      * notification image
-     * */
+     */
     public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -200,15 +167,14 @@ private void startBackgroundService(){
             String text = intent.getStringExtra("Text");
             String dollarAmount = intent.getStringExtra("DollarAmount");
 
-            Log.d("NOTIFICATION_RECEIVER" , "GOT TITLE : " + dollarAmount + " " + text);
-            Intent i = new Intent(context, NotificationIntentService.class );
+            Log.d("NOTIFICATION_RECEIVER", "GOT TITLE : " + dollarAmount + " " + text);
+            Intent i = new Intent(context, NotificationIntentService.class);
             i.putExtra("amount", dollarAmount);
             context.startService(i);
         }
     }
 
-    private void scheduleJob()
-    {
+    private void scheduleJob() {
         dispatcher.mustSchedule(
                 dispatcher.newJobBuilder()
                         .setService(TestService.class)
@@ -230,7 +196,6 @@ private void startBackgroundService(){
         Log.i("isMyServiceRunning?", false + "");
         return false;
     }
-
 
     private boolean loadFragment(Fragment fragment) {
         //switching fragment
@@ -263,128 +228,31 @@ private void startBackgroundService(){
         return myList;
     }
 
-
-    public void pushNotification(String msgText, String msgTitle) {
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        String NOTIFICATION_CHANNEL_ID = "my_channel_id_02";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-
-        Intent sfIntent = new Intent(this, MainActivity.class);
-        //dismiss the dialog
-        Intent noIntent = new Intent(this, DismissReceiver.class);
-        Intent yesIntent = new Intent(this, DismissReceiver.class);
-        noIntent.putExtra("gotoFragment", "Close");
-        yesIntent.putExtra("gotoFragment", "ExpenseTrackerFragment");
-
-        //Create the PendingIntent
-        PendingIntent btPendingIntentNo = PendingIntent.getBroadcast(this, 1234, noIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent btPendingIntentYes = PendingIntent.getBroadcast(this, 1234, yesIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-        NotificationCompat.Action actionno = new NotificationCompat.Action.Builder(R.drawable.ic_thumb_down_grey600_48dp, "No", btPendingIntentNo).build();
-        NotificationCompat.Action actionyes = new NotificationCompat.Action.Builder(R.drawable.ic_thumb_up_grey600_48dp, "Yes", btPendingIntentYes).build();
-
-        notificationBuilder.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.mom_logo)
-                .setTicker(getString(R.string.app_name))
-                //     .setPriority(Notification.PRIORITY_MAX)
-                .setContentTitle(msgTitle)
-                .setContentText(msgText)
-//                .addAction(R.drawable.ic_thumb_up_grey600_48dp , "No" , btPendingIntentNo)
-//                .addAction(R.drawable.ic_thumb_down_grey600_48dp , "Yes" , btPendingIntentYes )
-                .addAction(actionno)
-                .addAction(actionyes)
-                .setContentInfo("Info");
-
-        notificationManager.notify(/*notification id*/1, notificationBuilder.build());
-    }
-
-    private void updateExpenses(Expense exp) {
-        Log.d("updating expense: ", exp.toString());
-        String uniqueID = UUID.randomUUID().toString();
-        mDatabase.child("expenses").child(mUser.getUid()).child(uniqueID).setValue(exp);
-
-
-    }
-
-    private static Job createJob(FirebaseJobDispatcher dispatcher) {
-        return dispatcher.newJobBuilder()
-                //persist the task across boots
-                .setLifetime(Lifetime.FOREVER)
-                //.setLifetime(Lifetime.UNTIL_NEXT_BOOT)
-                //call this service when the criteria are met.
-                .setService(TestService.class)
-                //unique id of the task
-                .setTag("UPDATESTREAKJOB")
-                //don't overwrite an existing job with the same tag
-                .setReplaceCurrent(false)
-                // We are mentioning that the job is periodic.
-                .setRecurring(true)
-                // Run every 30 min from now. You can modify it to your use.
-                .setTrigger(Trigger.executionWindow(5, 30))
-                // retry with exponential backoff
-                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                //Run this job only when the network is available.
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .build();
-    }
-
-
-    private void cancelJob(Context context, String jobTag) {
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
-        //Cancel all the jobs for this package
-        dispatcher.cancelAll();
-        // Cancel the job for this tag
-        dispatcher.cancel(jobTag);
-    }
-
-
     private void getMaxSpendingAmount() {
         Query myTopPostsQuery = mDatabase.child("users").child(mUser.getUid());
-
-        // [START basic_query_value_listener]
-        // My top posts by number of stars
         myTopPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                           int exp = 0;
+            int exp = 0;
 
-                                                           @Override
-                                                           public void onDataChange(DataSnapshot dataSnapshot) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                                               User user = dataSnapshot.getValue(User.class);
-                                                               exp = user.maxSpending;
-                                                               System.out.print("maxSpendingValue  :" + exp);
-                                                               updateMaxSpendingValue(exp);
-                                                           }
+                User user = dataSnapshot.getValue(User.class);
+                exp = user.maxSpending;
+                System.out.print("maxSpendingValue  :" + exp);
+                updateMaxSpendingValue(exp);
+            }
 
-                                                           @Override
-                                                           public void onCancelled(DatabaseError databaseError) {
-                                                               // Getting Post failed, log a message
-                                                               Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                                                               // ...
-                                                           }
-
-                                                       }
-
-        );
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });
     }
 
     public void updateMaxSpendingValue(int val) {
         CurrentUserMaxSpendingAmount = val;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -402,13 +270,12 @@ private void startBackgroundService(){
                 return true;
             case R.id.action_logout:
                 firebaseAuth.signOut();
-                startActivity(new Intent(this,LoginActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
 
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -420,30 +287,24 @@ private void startBackgroundService(){
         ft.detach(frg);
         ft.attach(frg);
         ft.commit();
-
     }
 
-    public void callRequiredFragment(String extra , String amount)
-    {
-        Log.d("MAINACTIVITY","sindie call required fragment");
-        if(extra.equals("ExpenseTrackerFragment"))
-        {
+    public void callRequiredFragment(String extra, String amount) {
+
+        if (extra.equals("ExpenseTrackerFragment")) {
             Fragment fragment = new ExpenseTrackerFragment();
             Bundle args = new Bundle();
 
-            args.putString("amount",amount);
-            args.putString("FragmentCall","ExpenseTrackerFragment");
-            Log.d("STARTFRAGMENTACTIVITY","received amount from start fragment activity"  + amount);
+            args.putString("amount", amount);
+            args.putString("FragmentCall", "ExpenseTrackerFragment");
+
             args.putLong("DateSelected", System.currentTimeMillis());
             fragment.setArguments(args);
 
-        if (fragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit();
-
-        }
         }
     }
 
@@ -451,9 +312,10 @@ private void startBackgroundService(){
      * Is Notification Service Enabled.
      * Verifies if the notification listener service is enabled.
      * Got it from: https://github.com/kpbird/NotificationListenerService-Example/blob/master/NLSExample/src/main/java/com/kpbird/nlsexample/NLService.java
+     *
      * @return True if enabled, false otherwise.
      */
-    private boolean isNotificationServiceEnabled(){
+    private boolean isNotificationServiceEnabled() {
         String pkgName = getPackageName();
         final String flat = Settings.Secure.getString(getContentResolver(),
                 ENABLED_NOTIFICATION_LISTENERS);
@@ -471,14 +333,14 @@ private void startBackgroundService(){
         return false;
     }
 
-
     /**
      * Build Notification Listener Alert Dialog.
      * Builds the alert dialog that pops up if the user has not turned
      * the Notification Listener Service on yet.
+     *
      * @return An alert dialog which leads to the notification enabling screen
      */
-    private AlertDialog buildNotificationServiceAlertDialog(){
+    private AlertDialog buildNotificationServiceAlertDialog() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.notification_listener_service);
         alertDialogBuilder.setMessage(R.string.notification_listener_service_explanation);
@@ -495,9 +357,8 @@ private void startBackgroundService(){
                         // the app. will not work as expected
                     }
                 });
-        return(alertDialogBuilder.create());
+        return (alertDialogBuilder.create());
     }
-
 }
 
 

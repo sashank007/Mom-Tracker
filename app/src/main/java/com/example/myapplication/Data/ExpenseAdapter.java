@@ -40,10 +40,6 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
         return lExpense.size();
     }
 
-    public Expense getItem(Expense position) {
-        return position;
-    }
-
     public long getItemId(int position) {
         return position;
     }

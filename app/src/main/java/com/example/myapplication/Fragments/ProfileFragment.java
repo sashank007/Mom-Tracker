@@ -123,8 +123,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void retrieveExpenses() {
+        int totalExp = 0;
         Query myQuery = mDatabase.child("expenses").child(mUser.getUid());
 
+        // [START basic_query_value_listener]
+        // My top posts by number of stars
         myQuery.addValueEventListener(new ValueEventListener() {
                                           float food = 0, bills = 0, supplies = 0, fun = 0, shopping = 0;
 

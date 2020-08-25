@@ -44,10 +44,12 @@ public class ExpenditureDialogFragment extends DialogFragment {
                 });
         return builder.create();
     }
-    public void showSnackBar(final View parent, final String text) {
+
+    private void showSnackBar(final View parent, final String text) {
         Snackbar sb = Snackbar.make(parent, text, Snackbar.LENGTH_LONG);
         sb.show();
     }
+
     private void removeStreak()
     {
         System.out.println("streak removed");

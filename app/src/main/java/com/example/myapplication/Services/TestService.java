@@ -33,25 +33,23 @@ import java.util.Calendar;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-public class TestService extends JobService
-{
+public class TestService extends JobService {
     private DatabaseReference mDatabase;
     private FirebaseUser mUser;
     private FirebaseAuth firebaseAuth;
     private static final String TAG = TestService.class.getSimpleName();
 
     @Override
-    public boolean onStartJob(JobParameters job)
-    {
+    public boolean onStartJob(JobParameters job) {
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mUser = firebaseAuth.getCurrentUser();
-            Log.i(TAG, "onStartJob: my job service class is called.");
+        Log.i(TAG, "onStartJob: my job service class is called.");
         StatFs statFs = new StatFs(Environment.getRootDirectory().getPath());
 //        pushNotification("Alarm triggered","Alarm!");
-        if(checkUpdateExpenses())
-            pushNotification("Did you fill in your expenses for the day?" , "Mom sent you a message:");
-        if(isMidnight())
+        if (checkUpdateExpenses())
+            pushNotification("Did you fill in your expenses for the day?", "Mom sent you a message:");
+        if (isMidnight())
             streakUpdater();
         Log.i("STREAK UPDATE SERVICE",
                 "Free space is " +
@@ -64,8 +62,7 @@ public class TestService extends JobService
     }
 
     @Override
-    public boolean onStopJob(JobParameters job)
-    {
+    public boolean onStopJob(JobParameters job) {
         return false;
     }
 
@@ -78,13 +75,13 @@ public class TestService extends JobService
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //update to streak
-                User currentUser  = dataSnapshot.getValue(User.class) ;
+                User currentUser = dataSnapshot.getValue(User.class);
                 System.out.println("current user :" + currentUser.currentStreak);
                 int currentStreak = currentUser.currentStreak;
                 int highestStreak = currentUser.highestStreak;
                 updateStreak(currentStreak);
-                if(currentStreak+1>highestStreak)
-                    highestStreakUpdated(currentStreak+1);
+                if (currentStreak + 1 > highestStreak)
+                    highestStreakUpdated(currentStreak + 1);
 
             }
 
@@ -96,32 +93,30 @@ public class TestService extends JobService
     }
 
 
-    private void updateStreak(int currStreak)
-    {
-        int newStreak = currStreak+1;
+    private void updateStreak(int currStreak) {
+        int newStreak = currStreak + 1;
         mDatabase.child("users").child(mUser.getUid()).child("currentStreak").setValue(newStreak);
-        Toast.makeText(this, "Updated streak!!!!!!" , Toast.LENGTH_LONG).show();
-        pushNotification("Updated your streak : " + newStreak , "Mom sent you a message:");
+        Toast.makeText(this, "Updated streak!!!!!!", Toast.LENGTH_LONG).show();
+        pushNotification("Updated your streak : " + newStreak, "Mom sent you a message:");
     }
-    private boolean checkUpdateExpenses()
-    {
+
+    private boolean checkUpdateExpenses() {
         Calendar rightNow = Calendar.getInstance();
         int currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
-        if(currentHourIn24Format==18)
+        if (currentHourIn24Format == 18)
             return true;
         return false;
     }
 
-    private boolean isMidnight()
-    {
+    private boolean isMidnight() {
         Calendar rightNow = Calendar.getInstance();
         int currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
         int currentMinute = rightNow.get(Calendar.MINUTE);
-        Log.d(TAG,"CURRENT MINUTE:" + currentMinute+currentHourIn24Format);
-        return (currentHourIn24Format==0&&currentMinute==1);
+        Log.d(TAG, "CURRENT MINUTE:" + currentMinute + currentHourIn24Format);
+        return (currentHourIn24Format == 0 && currentMinute == 1);
     }
-    public void pushNotification(String msgText , String msgTitle )
-    {
+
+    public void pushNotification(String msgText, String msgTitle) {
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "my_channel_id_01";
 
@@ -136,7 +131,7 @@ public class TestService extends JobService
             notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
-        Intent intent = new Intent(getApplicationContext() , MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 intent, 0);
 
@@ -157,9 +152,9 @@ public class TestService extends JobService
         notificationManager.notify(/*notification id*/1, notificationBuilder.build());
     }
 
-    private void highestStreakUpdated(int newStreak)
-    { mDatabase.child("users").child(mUser.getUid()).child("highestStreak").setValue(newStreak);
-        pushNotification("Way to go honey you just got a new max streak : " + newStreak , "Mom sent you a message:");
+    private void highestStreakUpdated(int newStreak) {
+        mDatabase.child("users").child(mUser.getUid()).child("highestStreak").setValue(newStreak);
+        pushNotification("Way to go honey you just got a new max streak : " + newStreak, "Mom sent you a message:");
 
     }
 }

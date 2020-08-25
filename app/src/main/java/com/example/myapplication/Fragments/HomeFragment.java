@@ -71,12 +71,13 @@ public class HomeFragment extends Fragment {
         myThread.start();
         sharedPreferences = getActivity().getSharedPreferences(getActivity().getPackageName(), Context.MODE_PRIVATE);
         currentStreak =  v.findViewById(R.id.tv_currentStreak);
-//        greeting =v.findViewById(R.id.tv_greeting);
         tvCountDownTimer =v.findViewById(R.id.tv_countDown);
+
         db = Room.databaseBuilder(getActivity(), AppDatabase.class, "production")
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigration()
                 .build();
+
         currentUser = db.userDao().findByName(firstName , lastName);
         fetchStreak();
         streakUpdater();
@@ -129,21 +130,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-//    private void createNotificationChannel() {
-//        // Create the NotificationChannel, but only on API 26+ because
-//        // the NotificationChannel class is new and not in the support library
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            CharSequence name = getString(R.string.channel_name);
-//            String description = getString(R.string.channel_description);
-//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//            channel.setDescription(description);
-//            // Register the channel with the system; you can't change the importance
-//            // or other notification behaviors after this
-//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//    }
     private void startCountDown() {
         {
             mHandler.post(new Runnable() {
@@ -166,7 +152,7 @@ public class HomeFragment extends Fragment {
                         long Secs = (int) (mills / 1000) % 60;
 //                        System.out.println("hours mins secs : " + Hours + " " + Mins + " " + " " + Secs);
                         if(Hours==6&&Mins==1&&Secs==1)
-                            requestExpensesUpdate();
+//                            requestExpensesUpdate();
                         if (Hours == 6&& Mins == 29&& Secs == 1) {
 
                             incrementCounter();

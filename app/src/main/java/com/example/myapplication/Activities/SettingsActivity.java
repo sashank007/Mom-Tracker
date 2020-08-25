@@ -22,13 +22,14 @@ public class SettingsActivity extends Activity {
     Button done;
     AppDatabase db;
     String maxSpendingAmount;
-    EditText maxSpending , firstName , lastName;
+    EditText maxSpending;
     SharedPreferences sharedPreferences;
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        done = (Button)findViewById(R.id.btn_done);
-        maxSpending = (EditText)findViewById(R.id.et_maxspending);
+        done = findViewById(R.id.btn_done);
+        maxSpending = findViewById(R.id.et_maxspending);
         sharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
 
         db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
@@ -39,13 +40,12 @@ public class SettingsActivity extends Activity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                createNewUser(firstName.getText().toString() , lastName.getText().toString() , Integer.parseInt(maxSpending.getText().toString()));
+
                 if(!maxSpending.getText().toString().equalsIgnoreCase("")) {
                     updateMaxSpending();
                     startActivity(new Intent(view.getContext(), MainActivity.class));
                 }
-                else
-                {
+                else {
                     Toast.makeText(getApplicationContext(),"Please fill in the max amount you would spend everyday"  , Toast.LENGTH_SHORT).show();
                 }
             }
@@ -53,7 +53,7 @@ public class SettingsActivity extends Activity {
     }
 
     private void updateMaxSpending() {
-        Intent intent = getIntent();
+
         if (sharedPreferences.contains(INTENT_EMAIL)) {
             String email = sharedPreferences.getString(INTENT_EMAIL,"");
             System.out.println("update max spending email: " + email);
@@ -62,11 +62,9 @@ public class SettingsActivity extends Activity {
             //update shared prefs
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(INTENT_SETTINGS,maxSpendingAmount);
-            editor.commit();
+            editor.apply();
             System.out.println("shared prefs:" + sharedPreferences.toString());
             db.userDao().updateMaxSpending(Integer.parseInt(maxSpendingAmount) , u.uid);
-            System.out.println("created new user in db: " + db.userDao().getAll().toArray());
-
         }
     }
 }

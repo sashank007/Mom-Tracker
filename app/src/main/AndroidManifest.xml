@@ -103,12 +103,12 @@
             android:name="com.example.myapplication.Services.AddExpenseService"
             android:exported="false"/>
 
-        <service android:name="com.example.myapplication.Services.TestService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
-            </intent-filter>
-        </service>
+        <!--<service android:name="com.example.myapplication.Services.TestService"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
         <receiver android:process=":remote"
             android:name="com.example.myapplication.Receivers.NotificationsReceiver"

@@ -30,17 +30,18 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 public class ExpensesListFragment extends Fragment {
-    AppDatabase db;
-    FirebaseAuth firebaseAuth;
-    DatabaseReference mDatabase;
-    FirebaseUser mUser;
-    ListView listView;
+    private AppDatabase db;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDatabase;
+    private FirebaseUser mUser;
+    private ListView listView;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         LayoutInflater lf = getActivity().getLayoutInflater();
         View v = lf.inflate(R.layout.fragment_expenseslist, container, false);
+
         //get db
         db = Room.databaseBuilder(getActivity(), AppDatabase.class, "production")
                 .allowMainThreadQueries()
@@ -49,7 +50,6 @@ public class ExpensesListFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mUser = firebaseAuth.getCurrentUser();
-//        List<Expense> listExpenses = db.expenseDao().getAll();
         listView = v.findViewById(R.id.listview_expenses);
 
         getExpenses();
@@ -81,7 +81,6 @@ public class ExpensesListFragment extends Fragment {
         });
     }
 
-
     private void updateExpensesList(List<Expense> myList) {
         System.out.println("my list:" + myList);
         ExpenseAdapter adapter = new ExpenseAdapter(getActivity(), R.layout.listview_item, myList);
@@ -92,6 +91,7 @@ public class ExpensesListFragment extends Fragment {
     private void sortList(List<Expense> list) {
         Collections.sort(list, new Comparator<Expense>() {
             public int compare(Expense ideaVal1, Expense ideaVal2) {
+
                 // avoiding NullPointerException in case name is null
                 Long val1 = ideaVal1.getCurrentDate();
                 Long val2 = ideaVal2.getCurrentDate();
